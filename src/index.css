@@ -1,0 +1,11 @@
+ @import "tailwindcss";
+
+
+ #root {
+     height: 100vh;
+ }
+
+ body {
+     background-image: url("assets/img/bg-leaves.png");
+     background-size: cover;
+ }
