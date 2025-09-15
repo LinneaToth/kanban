@@ -4,6 +4,7 @@ export type Item = {
   description: string;
   parent: string;
   archived: boolean;
+  date: string;
 };
 
 export type Column = {

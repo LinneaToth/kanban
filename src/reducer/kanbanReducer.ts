@@ -29,6 +29,7 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
         description: action.payload.description,
         parent: action.payload.parent,
         archived: false,
+        date: new Date().toLocaleDateString(),
       };
       const updatedItems = [...state.items, newItem];
       return { ...state, items: updatedItems };

@@ -2,7 +2,7 @@ export default function Button({ children, onClick, bgcolor = "gray" }) {
   //bg-gray-700 bg-gray-800 bg-gray-300
   return (
     <button
-      className={`m-1 px-3 inlinepy-2 text-xs font-medium text-center text-white bg-${bgcolor}-700 rounded-md hover:bg-${bgcolor}-800 focus:ring-1 focus:outline-none focus:ring-${bgcolor}-300 hover:cursor-pointer`}
+      className={`rounded-md bg-slate-800 py-1 px-3 border border-transparent text-center text-xs text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2 cursor-pointer`}
       onClick={onClick}>
       {children}
     </button>

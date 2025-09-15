@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import ModalContent from "./ModalContent.tsx";
 import dragIcon from "../assets/icons/drag_icon.svg";
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
+import Input from "./Input.tsx";
 import Button from "./Button.tsx";
 
 export default function KanbanItem({ currentItem }) {
@@ -38,19 +39,20 @@ export default function KanbanItem({ currentItem }) {
       ref={setNodeRef}
       style={{ ...style, zIndex: "99998" }}
       {...attributes}
-      className="bg-gray-300/85 text-black p-3 mt-3 rounded-xl max-w-[200px] self-center">
+      className="bg-gray-300/85 text-black p-3 mt-3 rounded-xl w-full self-center grid grid-cols-6">
       <img
-        className="inline cursor-grab"
+        className="col-start-1 col-span-1 cursor-grab self-center"
         src={dragIcon}
         style={{ width: "20px" }}
         alt="Icon Drag"
         {...listeners}
       />
-      <h2 className="text-base inline"> {currentItem.title} </h2>
-
-      <Button onClick={() => setSearchParams({ itemid: currentItem.id })}>
-        Show Details
-      </Button>
+      <h2
+        className="text-base col-start-2 col-span-5 self-center cursor-pointer"
+        onClick={() => setSearchParams({ itemid: currentItem.id })}>
+        {" "}
+        {currentItem.title}{" "}
+      </h2>
       {isOpen &&
         createPortal(
           <ModalContent
@@ -60,26 +62,32 @@ export default function KanbanItem({ currentItem }) {
             {edit ? (
               <>
                 {" "}
-                <input
-                  className="border-2 block"
+                <Input
                   name="title"
                   type="text"
+                  labelText="Title:"
                   value={editedItem.title}
                   onChange={(e) =>
                     setEditedItem({ ...editedItem, title: e.target.value })
                   }
-                />{" "}
+                />
               </>
             ) : (
               <h2 className="text-2xl">{currentItem.title}</h2>
             )}
-            <p className="text-base italic">Date of creation</p>
+
+            {!edit ? (
+              <p className="text-base italic">{currentItem.date}</p>
+            ) : (
+              ""
+            )}
 
             {edit ? (
               <>
-                <textarea
-                  className="border-2 block"
+                <Input
+                  type="textarea"
                   name="description"
+                  labelText="Item description:"
                   value={editedItem.description}
                   onChange={(e) =>
                     setEditedItem({
@@ -98,7 +106,11 @@ export default function KanbanItem({ currentItem }) {
             )}
 
             <p
-              className="text-base mt-5"
+              className={`${
+                edit
+                  ? "cursor-pointer bg-gray-100 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow select-none"
+                  : ""
+              }`}
               onClick={() => {
                 if (edit) {
                   setEditedItem({

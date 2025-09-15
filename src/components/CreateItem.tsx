@@ -3,6 +3,7 @@ import { useState, useContext } from "react";
 import { createPortal } from "react-dom";
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
 import type { Column } from "../types/types";
+import Input from "./Input";
 
 export default function CreateItem() {
   const state = useContext(KanbanContext);
@@ -28,7 +29,7 @@ export default function CreateItem() {
   return (
     <>
       <button
-        className="ml-auto mt-auto hover:cursor-pointer"
+        className="cursor-pointer rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-auto"
         onClick={() => setShowModal(true)}>
         Create item +
       </button>
@@ -41,43 +42,35 @@ export default function CreateItem() {
               console.log("closing…");
             }}>
             <h2>New Item</h2>
+
             <form className="flex flex-col" onSubmit={(e) => handleSubmit(e)}>
-              <label className="block" htmlFor="title">
-                Item title:
-              </label>
-              <input
-                className="border-2 block"
-                name="title"
+              <Input
                 type="text"
+                name="title"
                 value={title}
+                labelText="Item title:"
                 onChange={(e) => setTitle(e.target.value)}
               />
-              <label className="block" htmlFor="description">
-                Item description:
-              </label>
-              <textarea
-                className="border-2 block"
+              <Input
+                type="textarea"
                 name="description"
-                type="text"
+                labelText="Item description:"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              <label className="block" htmlFor="parent">
-                Category:
-              </label>
-              <select
-                className="block border-2"
-                onChange={(e) => setParent(e.target.value)}>
-                {state.boards.map((board: Column) => {
-                  return (
-                    <option key={board.id} value={board.id}>
-                      {board.title}
-                    </option>
-                  );
-                })}
-              </select>
+              <Input
+                type="select"
+                name="parent"
+                labelText="Category:"
+                value={state.boards}
+                onChange={(e) => setParent(e.target.value)}
+              />
 
-              <button type="submit">Add new item +</button>
+              <button
+                type="submit"
+                className="cursor-pointer rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+                Add new item +
+              </button>
             </form>
           </ModalContent>,
           document.body

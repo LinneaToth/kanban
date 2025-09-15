@@ -48,13 +48,17 @@ export default function ModalContent({
     <div
       ref={modalRef}
       className={
-        "w-3/5 h-3/5 fixed top-[20%] left-[20%] bg-white/70 backdrop-blur-sm p-7 rounded-3xl border-black border-2"
+        "w-2/5 fixed top-[20%] left-[30%] bg-white/70 backdrop-blur-sm p-7 rounded-3xl border-black border-2"
       }
       style={{
         zIndex: "99999",
       }}>
+      <button
+        onClick={onClose}
+        className="absolute top-3 right-5 cursor-pointer text-gray-900 text-4xl">
+        ×
+      </button>
       <div>{children}</div>
-      <Button onClick={onClose}>Close</Button>
     </div>
   );
 }
