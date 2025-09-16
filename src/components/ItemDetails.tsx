@@ -1,42 +1,38 @@
 import { useDraggable } from "@dnd-kit/core";
 import { useState, useContext } from "react";
 import { createPortal } from "react-dom";
-import { useSearchParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ModalContent from "./ModalContent.tsx";
 import dragIcon from "../assets/icons/drag_icon.svg";
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
 import Input from "./Input.tsx";
 import Button from "./Button.tsx";
-import type { Item } from "../types/types.ts";
+import type { Kanban } from "../types/types.ts";
 
-interface KanbanItem {
+interface ItemDetailsProps {
   itemId: string;
 }
 
-export default function KanbanItem({ itemId }: KanbanItem) {
-  const [edit, setEdit] = useState(false);
-  const state = useContext(KanbanContext);
-
-  const [editedItem, setEditedItem] = useState(
-    state.items.find((item: Item) => item.id === itemId)
-  );
-  const { title, date, description } = state.items.find(
-    (item: Item) => item.id === itemId
-  );
-
+export default function ItemDetails({ itemId }: ItemDetailsProps) {
+  const state: Kanban = useContext(KanbanContext)!;
   const dispatch = useContext(KanbanDispatchContext);
-  const [searchParams, setSearchParams] = useSearchParams(); //For connecting routing to the modal
+  const [edit, setEdit] = useState(false);
+  const [editedItem, setEditedItem] = useState(
+    state.items.find((item) => item.id === itemId)
+  );
+  const location = useLocation();
 
-  const isOpen = searchParams.get("itemid") === String(itemId);
+  if (!itemId) return;
+
+  console.log("At least I got here");
 
   const handleDelete = () => {
-    dispatch({ type: "deleteItem", payload: { id: itemId } });
-    setSearchParams({});
+    dispatch({ type: "deleteItem", payload: { id: currentItem.id } });
   };
 
   /* below, dnd setup */
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: itemId,
+    id: currentItem.id,
   });
   const style = transform
     ? {
@@ -60,15 +56,15 @@ export default function KanbanItem({ itemId }: KanbanItem) {
       />
       <h2
         className="text-base col-start-2 col-span-5 self-center cursor-pointer"
-        onClick={() => setSearchParams({ itemid: itemId })}>
+        onClick={() => setSearchParams({ itemid: currentItem.id })}>
         {" "}
-        {title}{" "}
+        {currentItem.title}{" "}
       </h2>
       {isOpen &&
         createPortal(
           <ModalContent
             showModal={isOpen}
-            item={state.items.find((item: Item) => item.id === itemId)}
+            item={currentItem}
             onClose={() => setSearchParams({})}>
             {edit ? (
               <>
@@ -84,10 +80,14 @@ export default function KanbanItem({ itemId }: KanbanItem) {
                 />
               </>
             ) : (
-              <h2 className="text-2xl">{title}</h2>
+              <h2 className="text-2xl">{currentItem.title}</h2>
             )}
 
-            {!edit ? <p className="text-base italic">{date}</p> : ""}
+            {!edit ? (
+              <p className="text-base italic">{currentItem.date}</p>
+            ) : (
+              ""
+            )}
 
             {edit ? (
               <>
@@ -95,7 +95,7 @@ export default function KanbanItem({ itemId }: KanbanItem) {
                   type="textarea"
                   name="description"
                   labelText="Item description:"
-                  value={description}
+                  value={editedItem.description}
                   onChange={(e) =>
                     setEditedItem({
                       ...editedItem,
@@ -105,10 +105,10 @@ export default function KanbanItem({ itemId }: KanbanItem) {
                 />
               </>
             ) : (
-              <p className="text-base mt-5">
+              <p className="text-base mt-2">
                 {" "}
                 <strong>Description: </strong>
-                {description}
+                {currentItem.description}
               </p>
             )}
 

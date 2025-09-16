@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
 import type { Column } from "../types/types";
 import Input from "./Input";
+import addIcon from "../assets/icons/add_icon.svg";
 
 export default function CreateItem() {
   const state = useContext(KanbanContext);
@@ -31,7 +32,13 @@ export default function CreateItem() {
       <button
         className="cursor-pointer rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-auto"
         onClick={() => setShowModal(true)}>
-        Create item +
+        Create item{" "}
+        <img
+          className="inline ml-3"
+          src={addIcon}
+          style={{ width: "15px" }}
+          alt="Icon Add"
+        />{" "}
       </button>
       {showModal &&
         createPortal(
@@ -69,7 +76,7 @@ export default function CreateItem() {
               <button
                 type="submit"
                 className="cursor-pointer rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
-                Add new item +
+                Add item
               </button>
             </form>
           </ModalContent>,

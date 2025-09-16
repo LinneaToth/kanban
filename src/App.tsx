@@ -12,10 +12,22 @@ const initialState: Kanban = {
     { id: "02", title: "Done", visible: true },
   ],
   items: [],
+  layout: {
+    baseShowing: true,
+    optionalCol: null,
+  },
 };
 
 function App() {
-  const [state, dispatch] = useReducer(kanbanReducer, initialState);
+  const localStorageKanban: string | null = localStorage.getItem("localKanban");
+  const savedKanban: Kanban | null = localStorageKanban
+    ? JSON.parse(localStorageKanban)
+    : null;
+
+  const [state, dispatch] = useReducer(
+    kanbanReducer,
+    savedKanban ? savedKanban : initialState
+  );
 
   return (
     <>

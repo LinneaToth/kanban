@@ -16,4 +16,8 @@ export type Column = {
 export type Kanban = {
   boards: Column[];
   items: Item[];
+  layout: {
+    baseShowing: boolean;
+    optionalCol: string | null;
+  };
 };
