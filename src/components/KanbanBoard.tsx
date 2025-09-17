@@ -9,21 +9,9 @@ import type { Kanban, Column } from "../types/types";
 
 export default function KanbanBoard(): React.JSX.Element {
   const state: Kanban = useContext(KanbanContext);
-  const dispatch: Kanban = useContext(KanbanDispatchContext);
+  const dispatch: () => void = useContext(KanbanDispatchContext);
 
   const [searchParams, setSearchParams] = useSearchParams(); //For connecting routing to the modal
-
-  useEffect(() => {
-    const colId = searchParams.get("col");
-    if (colId && state.boards.find((board) => board.id === colId)) {
-      showSoloCol(colId);
-    } else if (colId) {
-      dispatch({ type: "showBaseCols", payload: true });
-      dispatch({ type: "showOptionalCol", payload: null });
-      alert("Board with id of " + colId + "not found");
-      setSearchParams("");
-    }
-  }, [searchParams, state.boards, dispatch]);
 
   const visibleColumns: string[] = [];
 
@@ -37,6 +25,34 @@ export default function KanbanBoard(): React.JSX.Element {
     visibleColumns.push(state.layout.optionalCol);
   }
 
+  //Logic below ensures that the column with the requested item is visible
+  useEffect(() => {
+    const colId = searchParams.get("colid");
+    if (colId && state.boards.find((board) => board.id === colId)) {
+      showSoloCol(colId);
+    } else if (colId) {
+      alert("Board with id of " + colId + "not found");
+      setSearchParams("");
+    }
+  }, [searchParams, setSearchParams, state.boards, dispatch, showSoloCol]);
+
+  //Logic below ensures that the requested column is visible when URL'ing for an item
+  useEffect(() => {
+    const colId = searchParams.get("col");
+    if (colId) {
+      const parentOfUrlItem = state.items.find(
+        (item) => item.id === searchParams.get("itemid")
+      )?.parent;
+
+      const parentShows: boolean = visibleColumns.includes(parentOfUrlItem);
+
+      if (parentOfUrlItem && !parentShows) {
+        showSoloCol(parentOfUrlItem);
+      }
+    }
+  }, []);
+
+  //ESLint recommends useCallback, I don't know that hook yet but I will look into it
   function showSoloCol(colId: string): void {
     dispatch({ type: "showBaseCols", payload: false });
     dispatch({ type: "showOptionalCol", payload: colId });
@@ -50,13 +66,15 @@ export default function KanbanBoard(): React.JSX.Element {
             <KanbanColumn key={column.id} id={column.id}>
               <h2
                 className="text-xl font-semibold mb-3"
-                onClick={() => showSoloCol(column.id)}>
+                onClick={() => {
+                  setSearchParams({ colid: column.id });
+                  showSoloCol(column.id);
+                }}>
                 {column.title.toUpperCase()}
               </h2>
               {state.items
                 .filter((item) => item.parent === column.id)
                 .map((item) => {
-                  console.log("rendering ItemDetails for:", item.id);
                   return <KanbanItem key={item.id} itemId={item.id} />;
                 })}
             </KanbanColumn>

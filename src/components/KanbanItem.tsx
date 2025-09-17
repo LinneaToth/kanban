@@ -89,18 +89,39 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
                     })
                   }
                 />
+                <Input
+                  type="select"
+                  name="parent"
+                  labelText="Category:"
+                  value={state.boards}
+                  onChange={(e: InputEvent) =>
+                    setEditedItem({ ...editedItem, parent: e.target.value })
+                  }
+                />
               </>
             ) : (
               <>
-                <h2 className="text-2xl">{currentItem.title}</h2>
-                <p className="text-base mt-2">{currentItem.description}</p>
+                <h2 className="text-2xl mb-1 mt-2 text-slate-600">
+                  {currentItem.title}
+                </h2>
+                <p className="text-sm mt-2 text-slate-600">
+                  <strong>Description: </strong> {currentItem.description}
+                </p>
+                <p className="mt-2 text-slate-600 text-sm">
+                  <strong>Category: </strong>{" "}
+                  {
+                    state.boards.find(
+                      (column) => column.id === currentItem.parent
+                    ).title
+                  }
+                </p>
               </>
             )}
 
             <p
-              className={`${
+              className={`mt-2 text-sm  text-slate-700 ${
                 edit
-                  ? "cursor-pointer bg-gray-100 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow select-none mt-2 mb-4"
+                  ? "cursor-pointer bg-gray-100 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow select-none mt-2 mb-4"
                   : "mb-4"
               }`}
               onClick={() => {
