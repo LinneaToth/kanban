@@ -155,6 +155,7 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
     }
 
     case "clearBoard": {
+      localStorage.removeItem("localKanban");
       localStorage.setItem(
         "localKanban",
         JSON.stringify({

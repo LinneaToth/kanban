@@ -73,7 +73,6 @@ export default function ItemDetails({ itemId }: ItemDetailsProps) {
             onClose={() => setSearchParams({})}>
             {edit ? (
               <>
-                {" "}
                 <Input
                   name="title"
                   type="text"
@@ -87,13 +86,11 @@ export default function ItemDetails({ itemId }: ItemDetailsProps) {
             ) : (
               <h2 className="text-2xl">{currentItem.title}</h2>
             )}
-
             {!edit ? (
               <p className="text-base italic">{currentItem.date}</p>
             ) : (
               ""
             )}
-
             {edit ? (
               <>
                 <label
@@ -122,6 +119,14 @@ export default function ItemDetails({ itemId }: ItemDetailsProps) {
               </p>
             )}
 
+            {edit ?     <Input
+                            type="select"
+                            name="parent"
+                            labelText="Category:"
+                            value={state.boards}
+                            onChange={(e) => setParent(e.target.value)}
+                          />
+            : "Category:" {currentItem.parent}}
             <p
               className={`${
                 edit
@@ -139,9 +144,7 @@ export default function ItemDetails({ itemId }: ItemDetailsProps) {
               <strong>Status: </strong>
               {!editedItem.archived ? "Active" : "Archived"}
             </p>
-
             <Button onClick={handleDelete}>DELETE</Button>
-
             <Button
               onClick={() => {
                 if (edit) dispatch({ type: "updateItem", payload: editedItem });
