@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
 import type { Column } from "../types/types";
 import Input from "./Input";
-import addIcon from "../assets/icons/add_icon.svg";
+import { RiStickyNoteAddLine } from "react-icons/ri";
 
 export default function CreateItem() {
   const state = useContext(KanbanContext);
@@ -30,15 +30,14 @@ export default function CreateItem() {
   return (
     <>
       <button
-        className="cursor-pointer rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-auto"
+        className="flex justify-center cursor-pointer rounded-md bg-slate-800 py-2 px-4 border border-transparent text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-auto"
         onClick={() => setShowModal(true)}>
         Create item{" "}
-        <img
-          className="inline ml-3"
-          src={addIcon}
-          style={{ width: "15px" }}
-          alt="Icon Add"
-        />{" "}
+        <RiStickyNoteAddLine
+          size="15px"
+          color="white"
+          style={{ alignSelf: "center", marginLeft: "1rem" }}
+        />
       </button>
       {showModal &&
         createPortal(

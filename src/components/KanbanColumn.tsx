@@ -2,7 +2,6 @@ import { useDroppable } from "@dnd-kit/core";
 import CreateItem from "./CreateItem";
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
-import addIcon from "../assets/icons/add_icon.svg";
 import { KanbanContext } from "../context/KanbanContext";
 import { KanbanDispatchContext } from "../context/KanbanContext";
 

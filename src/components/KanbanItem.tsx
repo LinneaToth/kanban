@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import { createPortal } from "react-dom";
 import { useSearchParams } from "react-router-dom";
 import ModalContent from "./ModalContent.tsx";
-import dragIcon from "../assets/icons/drag_icon.svg";
+import { GrDrag } from "react-icons/gr";
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
 import Input from "./Input.tsx";
 import Button from "./Button.tsx";
@@ -46,13 +46,10 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
       ref={setNodeRef}
       style={{ ...style, zIndex: 99998 }}
       {...attributes}
-      className="bg-gray-300/85 text-black p-3 mb-3 rounded-xl w-full self-center grid grid-cols-6">
-      <img
-        className="col-start-1 col-span-1 cursor-grab self-center"
-        src={dragIcon}
-        style={{ width: "20px" }}
-        alt="Icon Drag"
+      className="bg-gray-300/85 text-black p-3 mb-3 rounded-xl w-full self-center grid grid-cols-6 align-middle">
+      <GrDrag
         {...listeners}
+        className={"self-center text-slate-800 cursor-grab"}
       />
       <h2
         className="text-base col-start-2 col-span-5 self-center cursor-pointer"

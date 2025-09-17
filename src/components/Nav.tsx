@@ -4,6 +4,8 @@ import { KanbanDispatchContext } from "../context/KanbanContext";
 import { KanbanContext } from "../context/KanbanContext";
 import ModalContent from "./ModalContent";
 import Input from "./Input";
+import { MdOutlineAddToPhotos } from "react-icons/md";
+import { TbStack2Filled } from "react-icons/tb";
 
 export default function Nav() {
   const [expanded, setExpanded] = useState(false);
@@ -38,12 +40,12 @@ export default function Nav() {
       <button
         className={"justify-self-end mr-9 cursor-pointer"}
         onClick={() => setExpanded((expanded) => !expanded)}>
-        Custom categories
+        <TbStack2Filled className="text-white" />
       </button>
 
       {expanded ? (
         <nav
-          className="absolute right-0 mr-7 top-7 p-2 bg-white/70 backdrop-blur-sm rounded-xl border-black border-2"
+          className="absolute right-0 mr-7 top-8 p-2 bg-slate-800/70 backdrop-blur-sm rounded-xl"
           style={{ zIndex: "99999999" }}>
           <ul>
             {state.boards.map(
@@ -63,7 +65,8 @@ export default function Nav() {
                 )
             )}
             <li className="cursor-pointer" onClick={() => setShowModal(true)}>
-              + New Category
+              <MdOutlineAddToPhotos className="text-white inline mr-1" /> New
+              Category
             </li>
           </ul>
         </nav>

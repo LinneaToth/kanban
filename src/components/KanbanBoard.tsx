@@ -27,16 +27,18 @@ export default function KanbanBoard(): React.JSX.Element {
 
   //Logic below ensures that the column with the requested item is visible
   useEffect(() => {
-    const colId = searchParams.get("colid");
-    if (colId && state.boards.find((board) => board.id === colId)) {
-      showSoloCol(colId);
-    } else if (colId) {
-      alert("Board with id of " + colId + "not found");
-      setSearchParams("");
-    }
-  }, [searchParams, setSearchParams, state.boards, dispatch, showSoloCol]);
+    const itemId = searchParams.get("itemid");
+    if (!itemId) return;
 
-  //Logic below ensures that the requested column is visible when URL'ing for an item
+    const item = state.items.find((i) => i.id === itemId);
+    if (!item) return;
+
+    if (!visibleColumns.includes(item.parent)) {
+      showSoloCol(item.parent);
+    }
+  }, [searchParams, state.items, visibleColumns]);
+
+  //Logic below ensures that the requested column is visible
   useEffect(() => {
     const colId = searchParams.get("col");
     if (colId) {
@@ -66,10 +68,7 @@ export default function KanbanBoard(): React.JSX.Element {
             <KanbanColumn key={column.id} id={column.id}>
               <h2
                 className="text-xl font-semibold mb-3"
-                onClick={() => {
-                  setSearchParams({ colid: column.id });
-                  showSoloCol(column.id);
-                }}>
+                onClick={() => showSoloCol(column.id)}>
                 {column.title.toUpperCase()}
               </h2>
               {state.items
