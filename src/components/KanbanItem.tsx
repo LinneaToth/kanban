@@ -9,46 +9,42 @@ import Input from "./Input.tsx";
 import Button from "./Button.tsx";
 import type { Item } from "../types/types.ts";
 
-interface KanbanItem {
+interface KanbanItemProps {
   itemId: string;
 }
 
-export default function KanbanItem({ itemId }: KanbanItem) {
-  const [edit, setEdit] = useState(false);
+export default function KanbanItem({ itemId }: KanbanItemProps) {
   const state = useContext(KanbanContext);
-
-  const [editedItem, setEditedItem] = useState(
-    state.items.find((item: Item) => item.id === itemId)
-  );
-  const { title, date, description } = state.items.find(
-    (item: Item) => item.id === itemId
-  );
-
   const dispatch = useContext(KanbanDispatchContext);
-  const [searchParams, setSearchParams] = useSearchParams(); //For connecting routing to the modal
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const currentItem: Item = state.items.find((item) => item.id === itemId);
+  const [edit, setEdit] = useState(false);
+  const [editedItem, setEditedItem] = useState<Item>({
+    ...currentItem,
+    description: currentItem?.description ?? "",
+  });
+
+  if (!currentItem) return null;
 
   const isOpen = searchParams.get("itemid") === String(itemId);
 
   const handleDelete = () => {
-    dispatch({ type: "deleteItem", payload: { id: itemId } });
+    dispatch({ type: "deleteItem", payload: { id: currentItem.id } });
     setSearchParams({});
   };
 
-  /* below, dnd setup */
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: itemId,
+    id: currentItem.id,
   });
   const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
+    ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
     : undefined;
-  /* above, dnd setup*/
 
   return (
     <div
       ref={setNodeRef}
-      style={{ ...style, zIndex: "99998" }}
+      style={{ ...style, zIndex: 99998 }}
       {...attributes}
       className="bg-gray-300/85 text-black p-3 mb-3 rounded-xl w-full self-center grid grid-cols-6">
       <img
@@ -61,41 +57,31 @@ export default function KanbanItem({ itemId }: KanbanItem) {
       <h2
         className="text-base col-start-2 col-span-5 self-center cursor-pointer"
         onClick={() => setSearchParams({ itemid: itemId })}>
-        {" "}
-        {title}{" "}
+        {currentItem.title}
       </h2>
+
       {isOpen &&
         createPortal(
           <ModalContent
             showModal={isOpen}
-            item={state.items.find((item: Item) => item.id === itemId)}
-            onClose={() => setSearchParams({})}>
+            onClose={() => setSearchParams({})}
+            item={currentItem}>
             {edit ? (
               <>
-                {" "}
                 <Input
-                  name="title"
                   type="text"
+                  name="title"
                   labelText="Title:"
                   value={editedItem.title}
                   onChange={(e) =>
                     setEditedItem({ ...editedItem, title: e.target.value })
                   }
                 />
-              </>
-            ) : (
-              <h2 className="text-2xl">{title}</h2>
-            )}
-
-            {!edit ? <p className="text-base italic">{date}</p> : ""}
-
-            {edit ? (
-              <>
                 <Input
                   type="textarea"
                   name="description"
-                  labelText="Item description:"
-                  value={description}
+                  labelText="Description:"
+                  value={editedItem.description ?? ""}
                   onChange={(e) =>
                     setEditedItem({
                       ...editedItem,
@@ -105,11 +91,10 @@ export default function KanbanItem({ itemId }: KanbanItem) {
                 />
               </>
             ) : (
-              <p className="text-base mt-5">
-                {" "}
-                <strong>Description: </strong>
-                {description}
-              </p>
+              <>
+                <h2 className="text-2xl">{currentItem.title}</h2>
+                <p className="text-base mt-2">{currentItem.description}</p>
+              </>
             )}
 
             <p
@@ -119,12 +104,11 @@ export default function KanbanItem({ itemId }: KanbanItem) {
                   : "mb-4"
               }`}
               onClick={() => {
-                if (edit) {
+                if (edit)
                   setEditedItem({
                     ...editedItem,
                     archived: !editedItem.archived,
                   });
-                }
               }}>
               <strong>Status: </strong>
               {!editedItem.archived ? "Active" : "Archived"}
@@ -139,7 +123,7 @@ export default function KanbanItem({ itemId }: KanbanItem) {
                 if (edit) dispatch({ type: "updateItem", payload: editedItem });
                 setEdit(!edit);
               }}>
-              {edit ? "Save changes" : <>EDIT</>}
+              {edit ? "Save changes" : "EDIT"}
             </Button>
           </ModalContent>,
           document.body

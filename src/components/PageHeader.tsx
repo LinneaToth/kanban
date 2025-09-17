@@ -3,9 +3,7 @@ import Nav from "./Nav";
 
 export default function PageHeader() {
   return (
-    <header className="w-full h-7 bg-slate-800 text-white">
-      <h1 className="inline mr-6 ml-3">MyKanBan</h1>
-      <Options></Options>
+    <header className="w-full h-7 bg-slate-800 text-white flex justify-between">
       <Nav></Nav>
     </header>
   );

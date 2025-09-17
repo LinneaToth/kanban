@@ -1,33 +1,38 @@
 import { useDraggable } from "@dnd-kit/core";
 import { useState, useContext } from "react";
 import { createPortal } from "react-dom";
-import { Link, useLocation } from "react-router-dom";
+import { useSearchParams, Link, useLocation } from "react-router-dom";
 import ModalContent from "./ModalContent.tsx";
 import dragIcon from "../assets/icons/drag_icon.svg";
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
 import Input from "./Input.tsx";
 import Button from "./Button.tsx";
-import type { Kanban } from "../types/types.ts";
+import type { Kanban, Item } from "../types/types.ts";
 
 interface ItemDetailsProps {
   itemId: string;
 }
 
 export default function ItemDetails({ itemId }: ItemDetailsProps) {
+  console.log("inside item details");
+
   const state: Kanban = useContext(KanbanContext)!;
   const dispatch = useContext(KanbanDispatchContext);
-  const [edit, setEdit] = useState(false);
-  const [editedItem, setEditedItem] = useState(
-    state.items.find((item) => item.id === itemId)
-  );
-  const location = useLocation();
 
-  if (!itemId) return;
+  const [edit, setEdit] = useState(false); //is the item currently being editable or not?
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  console.log("At least I got here");
+  const currentItem: Item = state.items.find((item) => item.id === itemId);
+  const [editedItem, setEditedItem] = useState<Item>({
+    ...currentItem,
+    description: currentItem.description ?? "",
+  });
+
+  const isOpen = searchParams.get("itemid") === String(itemId);
 
   const handleDelete = () => {
     dispatch({ type: "deleteItem", payload: { id: currentItem.id } });
+    setSearchParams({}); // clean url and close modal after delete
   };
 
   /* below, dnd setup */
@@ -91,10 +96,15 @@ export default function ItemDetails({ itemId }: ItemDetailsProps) {
 
             {edit ? (
               <>
-                <Input
-                  type="textarea"
-                  name="description"
-                  labelText="Item description:"
+                <label
+                  className="block mb-1 mt-2 text-sm text-slate-600"
+                  htmlFor={"description"}>
+                  {labelText}
+                </label>{" "}
+                <textarea
+                  id={"description"}
+                  className="w-full bg-gray-100 placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                  name={"description"}
                   value={editedItem.description}
                   onChange={(e) =>
                     setEditedItem({
@@ -130,9 +140,7 @@ export default function ItemDetails({ itemId }: ItemDetailsProps) {
               {!editedItem.archived ? "Active" : "Archived"}
             </p>
 
-            <Button onClick={handleDelete} bgcolor="red">
-              DELETE
-            </Button>
+            <Button onClick={handleDelete}>DELETE</Button>
 
             <Button
               onClick={() => {

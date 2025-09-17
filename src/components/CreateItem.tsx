@@ -46,7 +46,6 @@ export default function CreateItem() {
             showModal={showModal}
             onClose={() => {
               setShowModal(false);
-              console.log("closing…");
             }}>
             <h2>New Item</h2>
 

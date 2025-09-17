@@ -16,7 +16,9 @@ type ACTIONTYPE =
       payload: Item;
     }
   | { type: "showOptionalCol"; payload: string }
-  | { type: "showBaseCols"; payload: boolean };
+  | { type: "showBaseCols"; payload: boolean }
+  | { type: "addOptionalCol"; payload: string }
+  | { type: "clearBoard" };
 
 export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
   switch (action.type) {
@@ -83,6 +85,17 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
       return { ...state, items: newItems };
     }
     case "showOptionalCol": {
+      localStorage.setItem(
+        "localKanban",
+        JSON.stringify({
+          ...state,
+          layout: {
+            optionalCol: action.payload,
+            baseShowing: state.layout.baseShowing,
+          },
+        })
+      );
+
       return {
         ...state,
         layout: {
@@ -93,11 +106,81 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
     }
 
     case "showBaseCols": {
+      localStorage.setItem(
+        "localKanban",
+        JSON.stringify({
+          ...state,
+          layout: {
+            optionalCol: state.layout.optionalCol,
+            baseShowing: action.payload,
+          },
+        })
+      );
+
       return {
         ...state,
         layout: {
           optionalCol: state.layout.optionalCol,
           baseShowing: action.payload,
+        },
+      };
+    }
+
+    case "addOptionalCol": {
+      const newColumns = [...state.boards];
+      const newCol = { title: action.payload, id: "col-" + uuidv4() };
+
+      newColumns.push(newCol);
+
+      localStorage.setItem(
+        "localKanban",
+        JSON.stringify({
+          ...state,
+          boards: newColumns,
+          layout: {
+            baseShowing: state.layout.baseShowing,
+            optionalCol: newCol.id,
+          },
+        })
+      );
+
+      return {
+        ...state,
+        boards: newColumns,
+        layout: {
+          baseShowing: state.layout.baseShowing,
+          optionalCol: newCol.id,
+        },
+      };
+    }
+
+    case "clearBoard": {
+      localStorage.setItem(
+        "localKanban",
+        JSON.stringify({
+          boards: [
+            { id: "00", title: "Todo" },
+            { id: "01", title: "Doing" },
+            { id: "02", title: "Done" },
+          ],
+          items: [],
+          layout: {
+            baseShowing: true,
+            optionalCol: null,
+          },
+        })
+      );
+
+      return {
+        boards: [
+          { id: "00", title: "Todo" },
+          { id: "01", title: "Doing" },
+          { id: "02", title: "Done" },
+        ],
+        items: [],
+        layout: {
+          baseShowing: true,
+          optionalCol: null,
         },
       };
     }

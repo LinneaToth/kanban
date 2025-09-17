@@ -4,12 +4,13 @@ import { kanbanReducer } from "./reducer/kanbanReducer";
 import type { Kanban } from "./types/types";
 import KanbanBoard from "./components/KanbanBoard";
 import PageHeader from "./components/PageHeader";
+import PageFooter from "./components/PageFooter";
 
 const initialState: Kanban = {
   boards: [
-    { id: "00", title: "Todo", visible: true },
-    { id: "01", title: "Doing", visible: true },
-    { id: "02", title: "Done", visible: true },
+    { id: "00", title: "Todo" },
+    { id: "01", title: "Doing" },
+    { id: "02", title: "Done" },
   ],
   items: [],
   layout: {
@@ -35,6 +36,7 @@ function App() {
         <KanbanDispatchContext value={dispatch}>
           <PageHeader />
           <KanbanBoard />
+          <PageFooter />
         </KanbanDispatchContext>
       </KanbanContext>
     </>
