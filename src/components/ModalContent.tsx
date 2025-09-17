@@ -1,21 +1,17 @@
 //USE THIS: https://react.dev/reference/react-dom/createPortal
 
 import { useEffect, useRef } from "react";
-import type { Item } from "../types/types";
-import Button from "./Button";
 
 type ModalContentProps = {
   onClose: () => void;
   showModal: boolean;
   children: React.ReactNode;
-  item: Item;
 };
 
 export default function ModalContent({
   onClose,
   children,
   showModal,
-  item,
 }: ModalContentProps) {
   const modalRef = useRef(null);
 

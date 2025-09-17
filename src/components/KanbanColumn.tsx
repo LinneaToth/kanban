@@ -1,8 +1,15 @@
 import { useDroppable } from "@dnd-kit/core";
 import CreateItem from "./CreateItem";
+import { useContext } from "react";
+import { useLocation } from "react-router-dom";
 import addIcon from "../assets/icons/add_icon.svg";
+import { KanbanContext } from "../context/KanbanContext";
+import { KanbanDispatchContext } from "../context/KanbanContext";
 
 export default function KanbanColumn({ id, children }) {
+  const state = useContext(KanbanContext);
+  const dispatch = useContext(KanbanDispatchContext);
+
   const { isOver, setNodeRef } = useDroppable({
     id: id,
   });
@@ -17,7 +24,10 @@ export default function KanbanColumn({ id, children }) {
       className="bg-gray-200/65 p-5 pt-8 w-[250px] flex flex-col rounded-2xl h-full 
   ">
       {children}
-      {id === "00" && <CreateItem />}
+      {state.layout.baseShowing && id === "00" && <CreateItem />}
+      {id === state.layout.optionalCol && !state.layout.baseShowing && (
+        <CreateItem />
+      )}
     </div>
   );
 }

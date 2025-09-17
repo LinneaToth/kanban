@@ -65,5 +65,7 @@ export default function Input({ type, name, labelText, value, onChange }) {
         </>
       );
     }
+    default:
+      return null;
   }
 }

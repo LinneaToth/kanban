@@ -10,7 +10,6 @@ export type Item = {
 export type Column = {
   title: string;
   id: string;
-  visible: boolean;
 };
 
 export type Kanban = {
