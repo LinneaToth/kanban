@@ -18,7 +18,8 @@ type ACTIONTYPE =
   | { type: "showOptionalCol"; payload: string }
   | { type: "showBaseCols"; payload: boolean }
   | { type: "addOptionalCol"; payload: string }
-  | { type: "clearBoard" };
+  | { type: "clearBoard" }
+  | { type: "deleteCol"; payload: string };
 
 export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
   switch (action.type) {
@@ -151,6 +152,22 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
           baseShowing: state.layout.baseShowing,
           optionalCol: newCol.id,
         },
+      };
+    }
+
+    case "deleteCol": {
+      console.log("deleting " + action.payload);
+      localStorage.removeItem("localKanban");
+      localStorage.setItem(
+        "localKanban",
+        JSON.stringify({
+          ...state,
+          boards: state.boards.filter((col) => col.id !== action.payload),
+        })
+      );
+      return {
+        ...state,
+        boards: state.boards.filter((col) => col.id !== action.payload),
       };
     }
 

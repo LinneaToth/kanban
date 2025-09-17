@@ -46,13 +46,13 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
       ref={setNodeRef}
       style={{ ...style, zIndex: 99998 }}
       {...attributes}
-      className="bg-gray-300/85 text-black p-3 mb-3 rounded-xl w-full self-center grid grid-cols-6 align-middle">
+      className="bg-gray-100/85 text-slate-800 p-3 mb-3 rounded-xl w-full self-center grid grid-cols-6 align-middle">
       <GrDrag
         {...listeners}
         className={"self-center text-slate-800 cursor-grab"}
       />
       <h2
-        className="text-base col-start-2 col-span-5 self-center cursor-pointer"
+        className="col-start-2 col-span-5 self-center cursor-pointer text-sm font-light"
         onClick={() => setSearchParams({ itemid: itemId })}>
         {currentItem.title}
       </h2>

@@ -54,23 +54,12 @@ export default function KanbanBoard(): React.JSX.Element {
     }
   }, []);
 
-  //ESLint recommends useCallback, I don't know that hook yet but I will look into it
-  function showSoloCol(colId: string): void {
-    dispatch({ type: "showBaseCols", payload: false });
-    dispatch({ type: "showOptionalCol", payload: colId });
-  }
-
   return (
     <main className="flex w-full justify-center gap-3 h-10/12 mt-7 pl-7 pr-7">
       <DndContext onDragEnd={handleDragEnd}>
         {state.boards.map((column) =>
           visibleColumns.includes(column.id) ? (
-            <KanbanColumn key={column.id} id={column.id}>
-              <h2
-                className="text-xl font-semibold mb-3"
-                onClick={() => showSoloCol(column.id)}>
-                {column.title.toUpperCase()}
-              </h2>
+            <KanbanColumn key={column.id} id={column.id} title={column.title}>
               {state.items
                 .filter((item) => item.parent === column.id)
                 .map((item) => {

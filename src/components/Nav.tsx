@@ -6,6 +6,8 @@ import ModalContent from "./ModalContent";
 import Input from "./Input";
 import { MdOutlineAddToPhotos } from "react-icons/md";
 import { TbStack2Filled } from "react-icons/tb";
+import { LuTimerReset } from "react-icons/lu";
+import { TbCategory } from "react-icons/tb";
 
 export default function Nav() {
   const [expanded, setExpanded] = useState(false);
@@ -28,8 +30,15 @@ export default function Nav() {
 
   return (
     <>
+      <button
+        className={"justify-self-start mr-3 ml-3 cursor-pointer"}
+        onClick={() => setExpanded((expanded) => !expanded)}>
+        <TbStack2Filled className="text-white" />
+      </button>
+
       <h1
-        className="inline mr-6 ml-3 cursor-pointer"
+        id="logo"
+        className="inline mr-6 ml-3 cursor-pointer text-2xl"
         onClick={() => {
           dispatch({ type: "showBaseCols", payload: true });
           dispatch({ type: "showOptionalCol", payload: "" });
@@ -37,15 +46,9 @@ export default function Nav() {
         myKanBan
       </h1>
 
-      <button
-        className={"justify-self-end mr-9 cursor-pointer"}
-        onClick={() => setExpanded((expanded) => !expanded)}>
-        <TbStack2Filled className="text-white" />
-      </button>
-
       {expanded ? (
         <nav
-          className="absolute right-0 mr-7 top-8 p-2 bg-slate-800/70 backdrop-blur-sm rounded-xl"
+          className="absolute left-0 ml-7 top-7 mt-3 p-2 bg-slate-800/70 backdrop-blur-sm rounded-xl"
           style={{ zIndex: "99999999" }}>
           <ul>
             {state.boards.map(
@@ -60,13 +63,24 @@ export default function Nav() {
                     onClick={() =>
                       dispatch({ type: "showOptionalCol", payload: board.id })
                     }>
+                    <TbCategory className="text-white inline mr-1" />{" "}
                     {board.title}
                   </li>
                 )
             )}
-            <li className="cursor-pointer" onClick={() => setShowModal(true)}>
-              <MdOutlineAddToPhotos className="text-white inline mr-1" /> New
+            <li
+              className="cursor-pointer border-t-1 border-white/60 mt-2"
+              onClick={() => setShowModal(true)}>
+              <MdOutlineAddToPhotos className="text-white inline mr-1 " /> New
               Category
+            </li>
+            <li
+              className="cursor-pointer"
+              onClick={() => {
+                dispatch({ type: "showBaseCols", payload: true });
+                dispatch({ type: "showOptionalCol", payload: "" });
+              }}>
+              <LuTimerReset className="text-white inline mr-1" /> Reset layout
             </li>
           </ul>
         </nav>
