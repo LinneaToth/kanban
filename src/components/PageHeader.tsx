@@ -1,4 +1,3 @@
-import Options from "./Options";
 import Nav from "./Nav";
 
 export default function PageHeader() {

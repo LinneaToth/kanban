@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, useEffect } from "react";
 import { KanbanContext, KanbanDispatchContext } from "./context/KanbanContext";
 import { kanbanReducer } from "./reducer/kanbanReducer";
 import type { Kanban } from "./types/types";
@@ -28,6 +28,10 @@ function App() {
     kanbanReducer,
     savedKanban ? savedKanban : initialState
   );
+
+  useEffect(() => {
+    localStorage.setItem("localKanban", JSON.stringify(state));
+  }, [state]);
 
   return (
     <>

@@ -54,6 +54,10 @@ export default function KanbanBoard(): React.JSX.Element {
     }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("localKanban", JSON.stringify(state));
+  }, [state]);
+
   return (
     <main className="flex w-full justify-center gap-3 h-10/12 mt-7 pl-7 pr-7">
       <DndContext onDragEnd={handleDragEnd}>

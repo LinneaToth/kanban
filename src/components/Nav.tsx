@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { KanbanDispatchContext } from "../context/KanbanContext";
 import { KanbanContext } from "../context/KanbanContext";
@@ -18,6 +18,10 @@ export default function Nav() {
   const [newCategory, setNewCategory] = useState("");
   const state = useContext(KanbanContext);
   const dispatch = useContext(KanbanDispatchContext);
+
+  useEffect(() => {
+    localStorage.setItem("localKanban", JSON.stringify(state));
+  }, [state]);
 
   const toggleExpand = () => {
     setExpanded((expanded) => !expanded);
@@ -52,7 +56,8 @@ export default function Nav() {
       {expanded ? (
         <nav
           className="absolute left-0 ml-7 top-7 mt-3 p-2 bg-slate-800/70 backdrop-blur-sm rounded-xl"
-          style={{ zIndex: "99999999" }}>
+          style={{ zIndex: "99999999" }}
+          onClick={() => toggleExpand()}>
           <ul>
             {state.boards.map(
               (board) =>
@@ -85,12 +90,12 @@ export default function Nav() {
               }}>
               <LuTimerReset className="text-white inline mr-1" /> Reset layout
             </li>
-            <li className="cursor-pointer">
-              <AiOutlineClear
-                className="text-white inline mr-1"
-                onClick={() => dispatch({ type: "clearBoard" })}
-              />{" "}
-              Clear Kanban
+            <li
+              className="cursor-pointer"
+              onClick={() => {
+                dispatch({ type: "clearBoard" });
+              }}>
+              <AiOutlineClear className="text-white inline mr-1" /> Clear Kanban
             </li>
           </ul>
         </nav>

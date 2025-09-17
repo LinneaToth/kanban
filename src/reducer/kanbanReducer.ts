@@ -26,16 +26,6 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
     case "moveToColumn": {
       const { itemId, boardId } = action.payload;
 
-      localStorage.setItem(
-        "localKanban",
-        JSON.stringify({
-          ...state,
-          items: state.items.map((item) =>
-            item.id === itemId ? { ...item, parent: boardId } : item
-          ),
-        })
-      );
-
       return {
         ...state,
         items: state.items.map((item) =>
@@ -55,10 +45,7 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
         date: new Date().toLocaleDateString(),
       };
       const updatedItems = [...state.items, newItem];
-      localStorage.setItem(
-        "localKanban",
-        JSON.stringify({ ...state, items: updatedItems })
-      );
+
       return { ...state, items: updatedItems };
     }
 
@@ -66,10 +53,7 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
       const newItems = state.items.filter(
         (item) => item.id !== action.payload.id
       );
-      localStorage.setItem(
-        "localKanban",
-        JSON.stringify({ ...state, items: newItems })
-      );
+
       return { ...state, items: newItems };
     }
 
@@ -78,25 +62,9 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
         (item) => item.id !== action.payload.id
       );
       newItems.push(action.payload);
-
-      localStorage.setItem(
-        "localKanban",
-        JSON.stringify({ ...state, items: newItems })
-      );
       return { ...state, items: newItems };
     }
     case "showOptionalCol": {
-      localStorage.setItem(
-        "localKanban",
-        JSON.stringify({
-          ...state,
-          layout: {
-            optionalCol: action.payload,
-            baseShowing: state.layout.baseShowing,
-          },
-        })
-      );
-
       return {
         ...state,
         layout: {
@@ -107,17 +75,6 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
     }
 
     case "showBaseCols": {
-      localStorage.setItem(
-        "localKanban",
-        JSON.stringify({
-          ...state,
-          layout: {
-            optionalCol: state.layout.optionalCol,
-            baseShowing: action.payload,
-          },
-        })
-      );
-
       return {
         ...state,
         layout: {
@@ -132,19 +89,6 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
       const newCol = { title: action.payload, id: "col-" + uuidv4() };
 
       newColumns.push(newCol);
-
-      localStorage.setItem(
-        "localKanban",
-        JSON.stringify({
-          ...state,
-          boards: newColumns,
-          layout: {
-            baseShowing: state.layout.baseShowing,
-            optionalCol: newCol.id,
-          },
-        })
-      );
-
       return {
         ...state,
         boards: newColumns,
@@ -156,15 +100,6 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
     }
 
     case "deleteCol": {
-      console.log("deleting " + action.payload);
-      localStorage.removeItem("localKanban");
-      localStorage.setItem(
-        "localKanban",
-        JSON.stringify({
-          ...state,
-          boards: state.boards.filter((col) => col.id !== action.payload),
-        })
-      );
       return {
         ...state,
         boards: state.boards.filter((col) => col.id !== action.payload),
@@ -172,23 +107,6 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
     }
 
     case "clearBoard": {
-      localStorage.removeItem("localKanban");
-      localStorage.setItem(
-        "localKanban",
-        JSON.stringify({
-          boards: [
-            { id: "00", title: "Todo" },
-            { id: "01", title: "Doing" },
-            { id: "02", title: "Done" },
-          ],
-          items: [],
-          layout: {
-            baseShowing: true,
-            optionalCol: null,
-          },
-        })
-      );
-
       return {
         boards: [
           { id: "00", title: "Todo" },

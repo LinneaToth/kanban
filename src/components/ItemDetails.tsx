@@ -30,6 +30,10 @@ export default function ItemDetails({ itemId }: ItemDetailsProps) {
 
   const isOpen = searchParams.get("itemid") === String(itemId);
 
+  useEffect(() => {
+    localStorage.setItem("localKanban", JSON.stringify(state));
+  }, [state]);
+
   const handleDelete = () => {
     dispatch({ type: "deleteItem", payload: { id: currentItem.id } });
     setSearchParams({}); // clean url and close modal after delete

@@ -1,6 +1,6 @@
 import { useDroppable } from "@dnd-kit/core";
 import CreateItem from "./CreateItem";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { KanbanContext } from "../context/KanbanContext";
 import { KanbanDispatchContext } from "../context/KanbanContext";
 import { RiDeleteBin5Line } from "react-icons/ri";
@@ -20,6 +20,10 @@ export default function KanbanColumn({
   const state = useContext(KanbanContext);
   const dispatch = useContext(KanbanDispatchContext);
   const [edit, setEdit] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("localKanban", JSON.stringify(state));
+  }, [state]);
 
   const { isOver, setNodeRef } = useDroppable({
     id: id,

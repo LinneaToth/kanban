@@ -1,5 +1,5 @@
 import ModalContent from "./ModalContent";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
 import type { Column } from "../types/types";
@@ -14,6 +14,10 @@ export default function CreateItem() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [parent, setParent] = useState("00");
+
+  useEffect(() => {
+    localStorage.setItem("localKanban", JSON.stringify(state));
+  }, [state]);
 
   const handleSubmit = (e): void => {
     e.preventDefault();

@@ -1,5 +1,5 @@
 import { useDraggable } from "@dnd-kit/core";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useSearchParams } from "react-router-dom";
 import ModalContent from "./ModalContent.tsx";
@@ -24,6 +24,10 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
     ...currentItem,
     description: currentItem?.description ?? "",
   });
+
+  useEffect(() => {
+    localStorage.setItem("localKanban", JSON.stringify(state));
+  }, [state]);
 
   if (!currentItem) return null;
 
