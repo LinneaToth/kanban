@@ -4,10 +4,13 @@ import { KanbanDispatchContext } from "../context/KanbanContext";
 import { KanbanContext } from "../context/KanbanContext";
 import ModalContent from "./ModalContent";
 import Input from "./Input";
+
+//Icons import
 import { MdOutlineAddToPhotos } from "react-icons/md";
 import { TbStack2Filled } from "react-icons/tb";
 import { LuTimerReset } from "react-icons/lu";
 import { TbCategory } from "react-icons/tb";
+import { AiOutlineClear } from "react-icons/ai";
 
 export default function Nav() {
   const [expanded, setExpanded] = useState(false);
@@ -81,6 +84,13 @@ export default function Nav() {
                 dispatch({ type: "showOptionalCol", payload: "" });
               }}>
               <LuTimerReset className="text-white inline mr-1" /> Reset layout
+            </li>
+            <li className="cursor-pointer">
+              <AiOutlineClear
+                className="text-white inline mr-1"
+                onClick={() => dispatch({ type: "clearBoard" })}
+              />{" "}
+              Clear Kanban
             </li>
           </ul>
         </nav>

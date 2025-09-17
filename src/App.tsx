@@ -4,7 +4,6 @@ import { kanbanReducer } from "./reducer/kanbanReducer";
 import type { Kanban } from "./types/types";
 import KanbanBoard from "./components/KanbanBoard";
 import PageHeader from "./components/PageHeader";
-import PageFooter from "./components/PageFooter";
 
 const initialState: Kanban = {
   boards: [
@@ -36,7 +35,6 @@ function App() {
         <KanbanDispatchContext value={dispatch}>
           <PageHeader />
           <KanbanBoard />
-          <PageFooter />
         </KanbanDispatchContext>
       </KanbanContext>
     </>
