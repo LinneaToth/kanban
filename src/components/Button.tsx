@@ -1,4 +1,9 @@
-export default function Button({ children, onClick, bgcolor = "gray" }) {
+interface ButtonProps {
+  children: React.ReactNode;
+  onClick?: () => void;
+}
+
+export default function Button({ children, onClick }: ButtonProps) {
   //bg-gray-700 bg-gray-800 bg-gray-300
   return (
     <button

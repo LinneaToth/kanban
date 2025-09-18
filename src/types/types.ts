@@ -17,7 +17,7 @@ export type Kanban = {
   items: Item[];
   layout: {
     baseShowing: boolean;
-    optionalCol: string | null;
+    optionalCol: string;
   };
 };
 

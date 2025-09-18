@@ -1,25 +1,38 @@
 import type { Column } from "../types/types";
 
-interface InputProps {
-  type: string;
+// BaseProps: shared props
+type BaseProps = {
   name: string;
   labelText: string;
-  value: string | Column[];
-  onChange: (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.FormEvent
-      | React.SyntheticEvent
-  ) => void;
-}
+};
 
-export default function Input({
-  type,
-  name,
-  labelText,
-  value,
-  onChange,
-}: InputProps) {
+// text input
+type TextInputProps = BaseProps & {
+  type: "text";
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+// textarea input
+type TextareaProps = BaseProps & {
+  type: "textarea";
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+};
+
+// select input
+type SelectProps = BaseProps & {
+  type: "select";
+  value: string; // selected board id
+  options: Column[]; // list of boards
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+};
+
+export type InputProps = TextInputProps | TextareaProps | SelectProps;
+
+export default function Input(props: InputProps) {
+  const { name, labelText, type, value, onChange } = props;
+
   switch (type) {
     case "text": {
       return (
@@ -70,10 +83,11 @@ export default function Input({
           <select
             id={name}
             name={name}
+            value={value}
             className="w-full bg-gray-100 placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow mb-4"
             onChange={onChange}>
-            {typeof value === "object"
-              ? value.map((board: Column) => {
+            {typeof props.options === "object"
+              ? props.options.map((board: Column) => {
                   return (
                     <option
                       key={board.id}

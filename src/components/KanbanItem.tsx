@@ -18,24 +18,56 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
   const dispatch = useContext(KanbanDispatchContext);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const currentItem: Item = state.items.find((item) => item.id === itemId);
   const [edit, setEdit] = useState(false);
-  const [editedItem, setEditedItem] = useState<Item>({
-    ...currentItem,
-    description: currentItem?.description ?? "",
-  });
+  const [editedItem, setEditedItem] = useState<Item | null>(null);
 
   useEffect(() => {
     localStorage.setItem("localKanban", JSON.stringify(state));
   }, [state]);
 
-  if (!currentItem || !state || !dispatch) return null;
+  const currentItem = state?.items.find((item) => item.id === itemId);
+
+  if (!currentItem || !state || !dispatch)
+    throw new Error("Something is missing!");
 
   const isOpen = searchParams.get("itemid") === String(itemId);
+
+  useEffect(() => {
+    if (currentItem) {
+      setEditedItem({
+        ...currentItem,
+        description: currentItem.description ?? "",
+      });
+    }
+  }, [currentItem]);
+
+  const handleToggleEdit = () => {
+    if (edit) {
+      if (editedItem) {
+        dispatch({ type: "updateItem", payload: editedItem });
+      }
+      setEditedItem(null);
+      setEdit(false);
+    } else {
+      setEditedItem({
+        ...currentItem,
+        description: currentItem.description ?? "",
+      });
+      setEdit(true);
+    }
+  };
 
   const handleDelete = () => {
     setSearchParams({});
     dispatch({ type: "deleteItem", payload: { id: currentItem.id } });
+    setEditedItem(null);
+    setEdit(false);
+  };
+
+  const handleCloseModal = () => {
+    setSearchParams({});
+    setEdit(false);
+    setEditedItem(null);
   };
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -63,8 +95,9 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
 
       {isOpen &&
         createPortal(
-          <ModalContent showModal={isOpen} onClose={() => setSearchParams({})}>
-            {edit ? (
+          <ModalContent showModal={isOpen} onClose={handleCloseModal}>
+            {edit && editedItem ? (
+              // EDIT MODE: editedItem is guaranteed non-null here
               <>
                 <Input
                   type="text"
@@ -72,35 +105,53 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
                   labelText="Title:"
                   value={editedItem.title}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setEditedItem({
-                      ...editedItem,
-                      title: e.target.value,
-                    })
+                    setEditedItem((prev) =>
+                      prev ? { ...prev, title: e.target.value } : prev
+                    )
                   }
                 />
+
                 <Input
                   type="textarea"
                   name="description"
                   labelText="Description:"
                   value={editedItem.description ?? ""}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setEditedItem({
-                      ...editedItem,
-                      description: e.target.value,
-                    })
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    setEditedItem((prev) =>
+                      prev ? { ...prev, description: e.target.value } : prev
+                    )
                   }
                 />
+
                 <Input
                   type="select"
                   name="parent"
                   labelText="Category:"
-                  value={state.boards}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setEditedItem({ ...editedItem, parent: e.target.value })
+                  options={state.boards}
+                  value={editedItem.parent}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setEditedItem((prev) =>
+                      prev ? { ...prev, parent: e.target.value } : prev
+                    )
                   }
                 />
+
+                <div className="flex gap-2 mt-3">
+                  <Button onClick={handleDelete} bgcolor="red">
+                    DELETE
+                  </Button>
+                  <Button onClick={handleToggleEdit}>Save changes</Button>
+                  <Button
+                    onClick={() => {
+                      setEdit(false);
+                      setEditedItem(null);
+                    }}>
+                    Cancel
+                  </Button>
+                </div>
               </>
             ) : (
+              // VIEW MODE
               <>
                 <h2 className="text-2xl mb-1 mt-2 text-slate-600">
                   {currentItem.title}
@@ -113,43 +164,18 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
                 </p>
                 <p className="mt-2 text-slate-600 text-sm">
                   <strong>Category: </strong>{" "}
-                  {
-                    state.boards.find(
-                      (column) => column.id === currentItem.parent
-                    ).title
-                  }
+                  {state.boards.find((c) => c.id === currentItem.parent)
+                    ?.title ?? "—"}
                 </p>
+
+                <div className="flex gap-2 mt-3">
+                  <Button onClick={handleDelete} bgcolor="red">
+                    DELETE
+                  </Button>
+                  <Button onClick={handleToggleEdit}>EDIT</Button>
+                </div>
               </>
             )}
-
-            <p
-              className={`mt-2 text-sm  text-slate-700 ${
-                edit
-                  ? "cursor-pointer bg-gray-100 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow select-none mt-2 mb-4"
-                  : "mb-4"
-              }`}
-              onClick={() => {
-                if (edit)
-                  setEditedItem({
-                    ...editedItem,
-                    archived: !editedItem.archived,
-                  });
-              }}>
-              <strong>Status: </strong>
-              {!editedItem.archived ? "Active" : "Archived"}
-            </p>
-
-            <Button onClick={handleDelete} bgcolor="red">
-              DELETE
-            </Button>
-
-            <Button
-              onClick={() => {
-                if (edit) dispatch({ type: "updateItem", payload: editedItem });
-                setEdit(!edit);
-              }}>
-              {edit ? "Save changes" : "EDIT"}
-            </Button>
           </ModalContent>,
           document.body
         )}

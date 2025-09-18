@@ -2,9 +2,9 @@ import ModalContent from "./ModalContent";
 import { useState, useContext, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
-import type { Column } from "../types/types";
 import Input from "./Input";
 import { RiStickyNoteAddLine } from "react-icons/ri";
+import type { Column } from "../types/types";
 
 export default function CreateItem() {
   const state = useContext(KanbanContext);
@@ -19,15 +19,19 @@ export default function CreateItem() {
     localStorage.setItem("localKanban", JSON.stringify(state));
   }, [state]);
 
-  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  if (!state) throw new Error("State missing");
+
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     setTitle("");
     setDescription("");
     setParent("00");
-    dispatch({
-      type: "newItem",
-      payload: { title: title, description: description, parent: parent },
-    });
+    if (dispatch) {
+      dispatch({
+        type: "newItem",
+        payload: { title: title, description: description, parent: parent },
+      });
+    }
     setShowModal(false);
   };
 
@@ -58,14 +62,16 @@ export default function CreateItem() {
                 name="title"
                 value={title}
                 labelText="Item title:"
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setTitle((e.target as HTMLInputElement).value)
+                }
               />
               <Input
                 type="textarea"
                 name="description"
                 labelText="Item description:"
                 value={description}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                   setDescription(e.target.value)
                 }
               />
@@ -73,8 +79,9 @@ export default function CreateItem() {
                 type="select"
                 name="parent"
                 labelText="Category:"
-                value={state.boards}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                options={state.boards}
+                value="01"
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                   setParent(e.target.value)
                 }
               />

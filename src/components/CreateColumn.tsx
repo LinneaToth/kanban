@@ -38,13 +38,17 @@ export default function CreateColumn({
     <>
       {" "}
       <h2>New Category</h2>
-      <form className="flex flex-col" onSubmit={(e) => handleSubmit(e)}>
+      <form
+        className="flex flex-col"
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}>
         <Input
           type="text"
           name="title"
           value={newCategory}
           labelText="Category Name:"
-          onChange={(e) => setNewCategory((e.target as HTMLInputElement).value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setNewCategory((e.target as HTMLInputElement).value)
+          }
         />
 
         <button

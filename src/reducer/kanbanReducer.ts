@@ -19,6 +19,7 @@ export type ACTIONTYPE =
   | { type: "showBaseCols"; payload: boolean }
   | { type: "addOptionalCol"; payload: { title: string; id: string } }
   | { type: "clearBoard" }
+  | { type: "resetLayout" }
   | { type: "deleteCol"; payload: string };
 
 export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
@@ -114,6 +115,16 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
       };
     }
 
+    case "resetLayout": {
+      return {
+        ...state,
+        layout: {
+          baseShowing: true,
+          optionalCol: "",
+        },
+      };
+    }
+
     case "clearBoard": {
       return {
         boards: [
@@ -124,7 +135,7 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
         items: [],
         layout: {
           baseShowing: true,
-          optionalCol: null,
+          optionalCol: "",
         },
       };
     }
