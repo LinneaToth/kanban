@@ -17,19 +17,21 @@ export default function CreateColumn({
   const [newCategory, setNewCategory] = useState("");
   const dispatch = useContext(KanbanDispatchContext);
   const state = useContext(KanbanContext);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
-  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newId: string = uuidv4();
-    dispatch({
-      type: "addOptionalCol",
-      payload: { title: newCategory, id: newId },
-    });
+    if (dispatch) {
+      dispatch({
+        type: "addOptionalCol",
+        payload: { title: newCategory, id: newId },
+      });
+    }
     setNewCategory("");
     setShowModal(false);
     setExpanded(false);
-    if (!state.layout.baseShowing) setSearchParams({ col: newId });
+    if (state && !state.layout.baseShowing) setSearchParams({ col: newId });
   };
 
   return (
@@ -42,9 +44,7 @@ export default function CreateColumn({
           name="title"
           value={newCategory}
           labelText="Category Name:"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setNewCategory(e.target.value)
-          }
+          onChange={(e) => setNewCategory((e.target as HTMLInputElement).value)}
         />
 
         <button

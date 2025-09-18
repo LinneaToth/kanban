@@ -1,7 +1,7 @@
 import type { Kanban, Item } from "../types/types.ts";
 import { v4 as uuidv4 } from "uuid";
 
-type ACTIONTYPE =
+export type ACTIONTYPE =
   | { type: "moveToColumn"; payload: { boardId: string; itemId: string } }
   | {
       type: "newItem";

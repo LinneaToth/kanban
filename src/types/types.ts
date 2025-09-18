@@ -20,3 +20,5 @@ export type Kanban = {
     optionalCol: string | null;
   };
 };
+
+export type ACTIONTYPE = string;

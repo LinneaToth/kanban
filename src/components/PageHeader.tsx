@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useRef } from "react";
+import { useContext, useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { KanbanDispatchContext } from "../context/KanbanContext";
 import { KanbanContext } from "../context/KanbanContext";
@@ -19,9 +19,9 @@ export default function PageHeader() {
 
   const state = useContext(KanbanContext);
   const dispatch = useContext(KanbanDispatchContext);
-  const menuRef = useRef(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     localStorage.setItem("localKanban", JSON.stringify(state));
@@ -31,14 +31,15 @@ export default function PageHeader() {
     setExpanded((expanded) => !expanded);
   };
 
-  const onClose = () => {
+  //Wrapped in useCallback so it doesn't change on every render, since it is in dependencies of useEffect
+  const onClose = useCallback(() => {
     setExpanded(false);
-  };
+  }, []);
 
   // Close nav on outside click
   useEffect(() => {
-    const handleClickOutside = (e: Event) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
+    const handleClickOutside = (e: globalThis.MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         onClose();
       }
     };
@@ -73,8 +74,10 @@ export default function PageHeader() {
         className="inline mr-6 ml-3 cursor-pointer text-2xl"
         onClick={() => {
           setSearchParams({});
-          dispatch({ type: "showBaseCols", payload: true });
-          dispatch({ type: "showOptionalCol", payload: "" });
+          if (dispatch) {
+            dispatch({ type: "showBaseCols", payload: true });
+            dispatch({ type: "showOptionalCol", payload: "" });
+          }
         }}>
         myKanBan
       </h1>
@@ -86,28 +89,34 @@ export default function PageHeader() {
           style={{ zIndex: "99999999" }}
           onClick={() => toggleExpand()}>
           <ul>
-            {state.boards.map(
-              (board) =>
-                board.id !== "00" &&
-                board.id !== "01" &&
-                board.id !== "02" && (
-                  <li
-                    key={board.id}
-                    className="cursor-pointer"
-                    value={board.id}
-                    onClick={() => {
-                      dispatch({ type: "showOptionalCol", payload: board.id });
-                      if (state.layout.showBaseCols === true) {
-                        setSearchParams({});
-                      } else {
-                        setSearchParams({ col: board.id });
-                      }
-                    }}>
-                    <TbCategory className="text-white inline mr-1" />{" "}
-                    {board.title}
-                  </li>
-                )
-            )}
+            {state &&
+              state.boards.map(
+                (board) =>
+                  board.id !== "00" &&
+                  board.id !== "01" &&
+                  board.id !== "02" && (
+                    <li
+                      key={board.id}
+                      className="cursor-pointer"
+                      value={board.id}
+                      onClick={() => {
+                        if (dispatch) {
+                          dispatch({
+                            type: "showOptionalCol",
+                            payload: board.id,
+                          });
+                        }
+                        if (state && state.layout.baseShowing === true) {
+                          setSearchParams({});
+                        } else {
+                          setSearchParams({ col: board.id });
+                        }
+                      }}>
+                      <TbCategory className="text-white inline mr-1" />{" "}
+                      {board.title}
+                    </li>
+                  )
+              )}
             <li
               className="cursor-pointer border-t-1 border-white/60 mt-2"
               onClick={() => {
@@ -121,8 +130,10 @@ export default function PageHeader() {
               className="cursor-pointer"
               onClick={() => {
                 setSearchParams({});
-                dispatch({ type: "showBaseCols", payload: true });
-                dispatch({ type: "showOptionalCol", payload: "" });
+                if (dispatch) {
+                  dispatch({ type: "showBaseCols", payload: true });
+                  dispatch({ type: "showOptionalCol", payload: "" });
+                }
               }}>
               <LuTimerReset className="text-white inline mr-1" /> Reset layout
             </li>
@@ -130,7 +141,7 @@ export default function PageHeader() {
               className="cursor-pointer"
               onClick={() => {
                 setSearchParams({});
-                dispatch({ type: "clearBoard" });
+                if (dispatch) dispatch({ type: "clearBoard" });
               }}>
               <AiOutlineClear className="text-white inline mr-1" /> Clear Kanban
             </li>

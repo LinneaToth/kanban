@@ -5,7 +5,12 @@ interface InputProps {
   name: string;
   labelText: string;
   value: string | Column[];
-  onChange: () => void;
+  onChange: (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.FormEvent
+      | React.SyntheticEvent
+  ) => void;
 }
 
 export default function Input({

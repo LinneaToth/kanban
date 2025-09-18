@@ -3,7 +3,7 @@ import { KanbanContext, KanbanDispatchContext } from "./context/KanbanContext";
 import { kanbanReducer } from "./reducer/kanbanReducer";
 import type { Kanban } from "./types/types";
 import KanbanBoard from "./components/KanbanBoard";
-import PageHeader from "./components/PageHeader";
+import PageHeader from "./components/PageHeader.tsx";
 
 const initialState: Kanban = {
   boards: [
@@ -35,12 +35,12 @@ function App() {
 
   return (
     <>
-      <KanbanContext value={state}>
-        <KanbanDispatchContext value={dispatch}>
+      <KanbanContext.Provider value={state}>
+        <KanbanDispatchContext.Provider value={dispatch}>
           <PageHeader />
           <KanbanBoard />
-        </KanbanDispatchContext>
-      </KanbanContext>
+        </KanbanDispatchContext.Provider>
+      </KanbanContext.Provider>
     </>
   );
 }
