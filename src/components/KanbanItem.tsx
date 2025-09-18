@@ -137,9 +137,7 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
                 />
 
                 <div className="flex gap-2 mt-3">
-                  <Button onClick={handleDelete} bgcolor="red">
-                    DELETE
-                  </Button>
+                  <Button onClick={handleDelete}>DELETE</Button>
                   <Button onClick={handleToggleEdit}>Save changes</Button>
                   <Button
                     onClick={() => {
@@ -169,9 +167,7 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
                 </p>
 
                 <div className="flex gap-2 mt-3">
-                  <Button onClick={handleDelete} bgcolor="red">
-                    DELETE
-                  </Button>
+                  <Button onClick={handleDelete}>DELETE</Button>
                   <Button onClick={handleToggleEdit}>EDIT</Button>
                 </div>
               </>

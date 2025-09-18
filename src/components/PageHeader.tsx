@@ -17,7 +17,7 @@ export default function PageHeader() {
   const state = useContext(KanbanContext);
   const dispatch = useContext(KanbanDispatchContext);
   const menuRef = useRef<HTMLDivElement>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   if (!dispatch || !state) throw new Error("Context missing");
 

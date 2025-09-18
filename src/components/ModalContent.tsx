@@ -13,12 +13,12 @@ export default function ModalContent({
   children,
   showModal,
 }: ModalContentProps) {
-  const modalRef = useRef(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   // Close modal on outside click
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
-      if (modalRef.current && !modalRef.current.contains(e.target)) {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
         onClose();
       }
     };

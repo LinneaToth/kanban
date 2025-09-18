@@ -4,7 +4,6 @@ import { createPortal } from "react-dom";
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
 import Input from "./Input";
 import { RiStickyNoteAddLine } from "react-icons/ri";
-import type { Column } from "../types/types";
 
 export default function CreateItem() {
   const state = useContext(KanbanContext);

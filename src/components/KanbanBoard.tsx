@@ -59,7 +59,7 @@ export default function KanbanBoard(): React.JSX.Element {
     }
     dispatch({ type: "showBaseCols", payload: false });
     dispatch({ type: "showOptionalCol", payload: colId });
-  }, [setSearchParams, searchParams, state.boards]);
+  }, [setSearchParams, searchParams, state.boards, dispatch]);
 
   useEffect(() => {
     localStorage.setItem("localKanban", JSON.stringify(state));
@@ -69,10 +69,11 @@ export default function KanbanBoard(): React.JSX.Element {
     const { active, over } = event;
     if (!over || !over.id) return;
 
-    dispatch({
-      type: "moveToColumn",
-      payload: { boardId: String(over.id), itemId: String(active.id) },
-    });
+    if (dispatch)
+      dispatch({
+        type: "moveToColumn",
+        payload: { boardId: String(over.id), itemId: String(active.id) },
+      });
   }
 
   return (

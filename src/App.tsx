@@ -14,7 +14,7 @@ const initialState: Kanban = {
   items: [],
   layout: {
     baseShowing: true,
-    optionalCol: null,
+    optionalCol: "",
   },
 };
 
