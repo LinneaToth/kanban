@@ -29,13 +29,13 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
     localStorage.setItem("localKanban", JSON.stringify(state));
   }, [state]);
 
-  if (!currentItem) return null;
+  if (!currentItem || !state || !dispatch) return null;
 
   const isOpen = searchParams.get("itemid") === String(itemId);
 
   const handleDelete = () => {
-    dispatch({ type: "deleteItem", payload: { id: currentItem.id } });
     setSearchParams({});
+    dispatch({ type: "deleteItem", payload: { id: currentItem.id } });
   };
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -63,10 +63,7 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
 
       {isOpen &&
         createPortal(
-          <ModalContent
-            showModal={isOpen}
-            onClose={() => setSearchParams({})}
-            item={currentItem}>
+          <ModalContent showModal={isOpen} onClose={() => setSearchParams({})}>
             {edit ? (
               <>
                 <Input
@@ -74,8 +71,11 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
                   name="title"
                   labelText="Title:"
                   value={editedItem.title}
-                  onChange={(e) =>
-                    setEditedItem({ ...editedItem, title: e.target.value })
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setEditedItem({
+                      ...editedItem,
+                      title: e.target.value,
+                    })
                   }
                 />
                 <Input
@@ -83,7 +83,7 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
                   name="description"
                   labelText="Description:"
                   value={editedItem.description ?? ""}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setEditedItem({
                       ...editedItem,
                       description: e.target.value,
@@ -95,7 +95,7 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
                   name="parent"
                   labelText="Category:"
                   value={state.boards}
-                  onChange={(e: InputEvent) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setEditedItem({ ...editedItem, parent: e.target.value })
                   }
                 />
@@ -105,6 +105,9 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
                 <h2 className="text-2xl mb-1 mt-2 text-slate-600">
                   {currentItem.title}
                 </h2>
+                <p className="text-xs italic text-slate-600">
+                  {currentItem.date}
+                </p>
                 <p className="text-sm mt-2 text-slate-600">
                   <strong>Description: </strong> {currentItem.description}
                 </p>

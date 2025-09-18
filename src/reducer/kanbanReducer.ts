@@ -17,7 +17,7 @@ type ACTIONTYPE =
     }
   | { type: "showOptionalCol"; payload: string }
   | { type: "showBaseCols"; payload: boolean }
-  | { type: "addOptionalCol"; payload: string }
+  | { type: "addOptionalCol"; payload: { title: string; id: string } }
   | { type: "clearBoard" }
   | { type: "deleteCol"; payload: string };
 
@@ -86,7 +86,10 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
 
     case "addOptionalCol": {
       const newColumns = [...state.boards];
-      const newCol = { title: action.payload, id: "col-" + uuidv4() };
+      const newCol = {
+        title: action.payload.title || "Untitled",
+        id: action.payload.id,
+      };
 
       newColumns.push(newCol);
       return {
@@ -100,9 +103,14 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
     }
 
     case "deleteCol": {
+      const newItems = state.items.filter(
+        (item) => item.parent !== action.payload
+      );
+
       return {
         ...state,
         boards: state.boards.filter((col) => col.id !== action.payload),
+        items: newItems,
       };
     }
 

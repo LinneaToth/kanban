@@ -3,6 +3,7 @@ import CreateItem from "./CreateItem";
 import { useContext, useState, useEffect } from "react";
 import { KanbanContext } from "../context/KanbanContext";
 import { KanbanDispatchContext } from "../context/KanbanContext";
+import { useSearchParams } from "react-router-dom";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
 
@@ -19,7 +20,10 @@ export default function KanbanColumn({
 }: KanbanColumnProps) {
   const state = useContext(KanbanContext);
   const dispatch = useContext(KanbanDispatchContext);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [edit, setEdit] = useState(false);
+
+  const isFocused = searchParams.get("col") === String(id);
 
   useEffect(() => {
     localStorage.setItem("localKanban", JSON.stringify(state));
@@ -32,12 +36,20 @@ export default function KanbanColumn({
     filter: isOver ? "brightness(120%)" : undefined,
   };
 
+  useEffect(() => {
+    if (isFocused) {
+      dispatch({ type: "showOptionalCol", payload: id });
+      dispatch({ type: "showBaseCols", payload: false });
+    }
+  }, [isFocused, dispatch, id]);
+
   const isOptionalCol = id !== "00" && id !== "01" && id !== "02";
 
   //ESLint recommends useCallback, I don't know that hook yet but I will look into it
   function showSoloCol(colId: string): void {
     dispatch({ type: "showBaseCols", payload: false });
     dispatch({ type: "showOptionalCol", payload: colId });
+    setSearchParams({ col: colId });
   }
 
   return (

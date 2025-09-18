@@ -19,7 +19,7 @@ export default function CreateItem() {
     localStorage.setItem("localKanban", JSON.stringify(state));
   }, [state]);
 
-  const handleSubmit = (e): void => {
+  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>): void => {
     e.preventDefault();
     setTitle("");
     setDescription("");
@@ -65,14 +65,18 @@ export default function CreateItem() {
                 name="description"
                 labelText="Item description:"
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setDescription(e.target.value)
+                }
               />
               <Input
                 type="select"
                 name="parent"
                 labelText="Category:"
                 value={state.boards}
-                onChange={(e) => setParent(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setParent(e.target.value)
+                }
               />
 
               <button

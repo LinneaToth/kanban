@@ -25,32 +25,34 @@ export default function KanbanBoard(): React.JSX.Element {
     visibleColumns.push(state.layout.optionalCol);
   }
 
+  function showSoloCol(colId: string): void {
+    dispatch({ type: "showBaseCols", payload: false });
+    dispatch({ type: "showOptionalCol", payload: colId });
+    setSearchParams({ col: colId });
+  }
   //Logic below ensures that the column with the requested item is visible
   useEffect(() => {
     const itemId = searchParams.get("itemid");
     if (!itemId) return;
 
     const item = state.items.find((i) => i.id === itemId);
-    if (!item) return;
+    if (itemId && !item) {
+      alert("No such item found!");
+      return;
+    }
 
     if (!visibleColumns.includes(item.parent)) {
       showSoloCol(item.parent);
     }
-  }, [searchParams, state.items, visibleColumns]);
+  }, [searchParams, state.items, visibleColumns, showSoloCol]);
 
   //Logic below ensures that the requested column is visible
   useEffect(() => {
     const colId = searchParams.get("col");
-    if (colId) {
-      const parentOfUrlItem = state.items.find(
-        (item) => item.id === searchParams.get("itemid")
-      )?.parent;
+    const colShows: boolean = visibleColumns.includes(colId);
 
-      const parentShows: boolean = visibleColumns.includes(parentOfUrlItem);
-
-      if (parentOfUrlItem && !parentShows) {
-        showSoloCol(parentOfUrlItem);
-      }
+    if (colId && !colShows) {
+      showSoloCol(colId);
     }
   }, []);
 
