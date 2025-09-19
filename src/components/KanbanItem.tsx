@@ -78,6 +78,7 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
   const style = transform
     ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
     : undefined;
+  //DND-code above
 
   return (
     <div
@@ -99,7 +100,7 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
         createPortal(
           <ModalContent showModal={isOpen} onClose={handleCloseModal}>
             {edit && editedItem ? (
-              // EDIT MODE: editedItem is guaranteed non-null here
+              // EDIT MODE: editedItem is guaranteed non-null here, these are here to please TypeScript
               <>
                 <Input
                   type="text"

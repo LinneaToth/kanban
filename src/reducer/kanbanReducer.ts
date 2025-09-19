@@ -19,6 +19,7 @@ export type ACTIONTYPE =
   | { type: "showOptionalCol"; payload: string }
   | { type: "showBaseCols"; payload: boolean }
   | { type: "addOptionalCol"; payload: { title: string; id: string } }
+  | { type: "editCol"; payload: { title: string; id: string } }
   | { type: "clearBoard" }
   | { type: "resetLayout" }
   | { type: "deleteCol"; payload: string };
@@ -113,6 +114,17 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
         ...state,
         boards: state.boards.filter((col) => col.id !== action.payload),
         items: newItems,
+      };
+    }
+
+    case "editCol": {
+      return {
+        ...state,
+        boards: state.boards.map((col) => {
+          if (col.id === action.payload.id) {
+            return { ...col, title: action.payload.title };
+          } else return col;
+        }),
       };
     }
 

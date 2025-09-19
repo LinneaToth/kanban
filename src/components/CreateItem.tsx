@@ -30,7 +30,7 @@ export default function CreateItem() {
     }
     setTitle("");
     setDescription("");
-    setParent("00");
+    setParent(state?.layout.optionalCol || "00");
     setShowModal(false);
   };
 

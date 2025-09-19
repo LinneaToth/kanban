@@ -1,4 +1,5 @@
 import React, { useContext, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   DndContext,
   useSensor,
@@ -8,7 +9,6 @@ import {
   type DragEndEvent,
 } from "@dnd-kit/core";
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
-import { useSearchParams } from "react-router-dom";
 import KanbanColumn from "./KanbanColumn";
 import KanbanItem from "./KanbanItem";
 import type { Kanban } from "../types/types";
@@ -20,7 +20,7 @@ export default function KanbanBoard(): React.JSX.Element {
   if (!state) throw new Error("State is missing");
   if (!dispatch) throw new Error("KanbanDispatchContext is missing");
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams(); //URL for routing
 
   // Visible columns based on layout state, computation added to a useMemo to avoid unnecessary re-rendering
   const visibleColumns = useMemo(() => {
@@ -71,7 +71,7 @@ export default function KanbanBoard(): React.JSX.Element {
     localStorage.setItem("localKanban", JSON.stringify(state));
   }, [state]);
 
-  //DND-code:
+  //DND-code below, setting up sensors for mouse and touch, & events for dragging the items:
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
       distance: 5, // pixels to move before drag starts
@@ -84,7 +84,6 @@ export default function KanbanBoard(): React.JSX.Element {
       tolerance: 5, // movement allowed during delay
     },
   });
-
   const sensors = useSensors(mouseSensor, touchSensor);
 
   function handleDragEnd(event: DragEndEvent): void {
@@ -98,6 +97,7 @@ export default function KanbanBoard(): React.JSX.Element {
         payload: { boardId: String(over.id), itemId: String(active.id) },
       });
   }
+  //DND-code above
 
   return (
     <main className="min-h-[70%] flex flex-wrap md:flex-nowrap sm:ml-[7%] md:ml-auto flex-row justify-center sm:justify-start md:justify-center gap-4 md:gap-5 mt-7 pl-7 pr-7 ">

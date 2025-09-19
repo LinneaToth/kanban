@@ -1,11 +1,13 @@
 import { useDroppable } from "@dnd-kit/core";
 import CreateItem from "./CreateItem";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { KanbanContext } from "../context/KanbanContext";
 import { KanbanDispatchContext } from "../context/KanbanContext";
 import { useSearchParams } from "react-router-dom";
+import Input from "./Input";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
+import { FaRegSave } from "react-icons/fa";
 
 interface KanbanColumnProps {
   id: string;
@@ -22,22 +24,24 @@ export default function KanbanColumn({
   const dispatch = useContext(KanbanDispatchContext);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const isFocused = searchParams.get("col") === String(id);
+  const [newCategory, setNewCategory] = useState("");
+  const [edit, setEdit] = useState(false);
+
+  const isFocused = searchParams.get("col") === String(id); //Is the layout currently focused on the column being rendered?
 
   if (!dispatch) throw new Error("Dispatch is missing!");
   if (!state) throw new Error("Kanban is missing!");
 
-  useEffect(() => {
-    localStorage.setItem("localKanban", JSON.stringify(state));
-  }, [state]);
-
+  //DND-code below
   const { isOver, setNodeRef } = useDroppable({
     id: id,
   });
   const style = {
     filter: isOver ? "brightness(120%)" : undefined,
   };
+  //DND-code above
 
+  //If the URL points towards the column being rendered, update layout accordingly
   useEffect(() => {
     if (isFocused) {
       dispatch({ type: "showOptionalCol", payload: id });
@@ -45,12 +49,23 @@ export default function KanbanColumn({
     }
   }, [isFocused, dispatch, id]);
 
+  //00, 01 and 02 (todo, doing, done) belong to the base layout and aren't optional.
   const isOptionalCol = id !== "00" && id !== "01" && id !== "02";
 
+  //If header is clicked, URL is updated with the corresponding params (column id) and the layout in the state is updated
   const showSoloCol = (colId: string): void => {
     dispatch({ type: "showBaseCols", payload: false });
     dispatch({ type: "showOptionalCol", payload: colId });
     setSearchParams({ col: colId });
+  };
+
+  const handleSubmitChange = () => {
+    dispatch({
+      type: "editCol",
+      payload: { id: id, title: newCategory },
+    });
+    setNewCategory("");
+    setEdit(false);
   };
 
   return (
@@ -62,11 +77,29 @@ export default function KanbanColumn({
         "bg-gray-200/65 p-5 pt-3 md:w-[250px] flex flex-col rounded-2xl min-h-[40vh] md:self-start drop-shadow-md"
       }>
       <nav className="flex flex-row border-b-1 border-slate-400 pb-2 pt-2 mb-3">
-        <h2
-          className=" font-base inline cursor-pointer text-lg mr-2 text-slate-800"
-          onClick={() => showSoloCol(id)}>
-          {title}
-        </h2>
+        {edit ? (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault;
+              handleSubmitChange();
+            }}>
+            <Input
+              type="text"
+              name="title"
+              value={newCategory ? newCategory : title}
+              labelText="Category:"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setNewCategory((e.target as HTMLInputElement).value)
+              }
+            />
+          </form>
+        ) : (
+          <h2
+            className=" font-base inline cursor-pointer text-lg mr-2 text-slate-800"
+            onClick={() => showSoloCol(id)}>
+            {title}
+          </h2>
+        )}
         {isOptionalCol && (
           <>
             <button
@@ -79,14 +112,22 @@ export default function KanbanColumn({
             </button>
             <button
               className="bg-slate-800 text-white p-1 align-middle text-center cursor-pointer ml-1 justify-self-end self-start rounded-full"
-              onClick={() => dispatch({ type: "deleteCol", payload: "id" })}>
-              <FaRegEdit />
+              onClick={() => {
+                if (edit) {
+                  handleSubmitChange();
+                } else if (!edit) {
+                  setNewCategory(title);
+                  setEdit(true);
+                }
+              }}>
+              {edit ? <FaRegSave /> : <FaRegEdit />}
             </button>
           </>
         )}
       </nav>
 
       {children}
+      {/* create item only shows on the first column if the base layout is visible. It shows on any column that is focused */}
       {state.layout.baseShowing && id === "00" && <CreateItem />}
       {id === state.layout.optionalCol && !state.layout.baseShowing && (
         <CreateItem />

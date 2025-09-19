@@ -1,5 +1,3 @@
-//USE THIS: https://react.dev/reference/react-dom/createPortal
-
 import { useEffect, useRef } from "react";
 
 type ModalContentProps = {
