@@ -1,10 +1,11 @@
 # Kanban
 
-WIP School assignment using React/TS/Tailwind/Vite! Stay tuned for routing, useReducer, Context API and other awesomeness
+[Live page - Check it out!](https://kanban-ts-react.vercel.app) 
 
 A Kanban board built with React, TypeScript and Tailwind, using Vite. This project was made as a school assignment in my second semester of web development!
 
 ![Preview](./preview.jpg) 
+
 
 ## Features
 - Multiple columns - three base categories (todo, doing & done) and unlimited optional ones! 
@@ -27,7 +28,10 @@ A Kanban board built with React, TypeScript and Tailwind, using Vite. This proje
 - **Deployment:** Vercel  
 
 ## Takeaways
--
+- Practice makes perfect. I may not be there yet, but for every project I get more comfortable with structuring my React apps! I started out with a hand drawn sketch of the component structure, which helped a lot. 
+- I gained more practice with implementing and combining external libraries. It all comes down to reading the docs, coffee and StackOverflow. 
+- I improved my understanding of TypeScript, and so our love story continues.
+- Tailwind is getting almost fluent at this point! 
 
 # The assignment - translated from Swedish, for your convenience:
 > # About the Assignment
