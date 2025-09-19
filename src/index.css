@@ -4,10 +4,8 @@
 
  #root {
      height: 100vh;
-     min-height: 800px;
      font-family: "Nunito", sans-serif;
      overflow: auto;
-
  }
 
  body {

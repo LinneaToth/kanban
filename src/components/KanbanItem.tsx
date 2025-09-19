@@ -91,7 +91,7 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
         className={"self-center text-slate-800 cursor-grab"}
       />
       <h2
-        className="col-start-2 col-span-5 self-center cursor-pointer text-sm font-light"
+        className="col-start-2 col-span-5 self-center cursor-pointer text-sm font-light select-none"
         onClick={() => setSearchParams({ itemid: itemId })}>
         {currentItem.title}
       </h2>
