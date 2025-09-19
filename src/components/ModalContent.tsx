@@ -44,10 +44,10 @@ export default function ModalContent({
     <div
       ref={modalRef}
       className={
-        "w-2/5 fixed top-[20%] left-[30%] bg-white/70 backdrop-blur-sm p-7 rounded-3xl border-slate-500 border-1"
+        "w-4/5 sm:w-2/5 fixed top-[20%] left-[10%] sm:left-[30%] bg-white/70 backdrop-blur-sm p-7 rounded-3xl border-slate-500 border-1"
       }
       style={{
-        zIndex: "99999",
+        zIndex: "99998",
       }}>
       <button
         onClick={onClose}

@@ -56,12 +56,14 @@ export default function KanbanColumn({
   return (
     <div
       ref={setNodeRef}
-      style={style}
-      className="bg-gray-200/65 p-5 pt-3 w-[250px] flex flex-col rounded-2xl h-full 
-  ">
-      <nav className="flex flex-row border-b-1 border-slate-800 pb-2 pt-2 mb-3">
+      style={{ ...style, zIndex: "99993" }}
+      className={
+        (isFocused ? " w-full " : " w-[90%] sm:w-[45%]  ") +
+        "bg-gray-200/65 p-5 pt-3 md:w-[250px] flex flex-col rounded-2xl min-h-[40vh] md:self-start drop-shadow-md"
+      }>
+      <nav className="flex flex-row border-b-1 border-slate-400 pb-2 pt-2 mb-3">
         <h2
-          className=" font-base inline cursor-pointer text-lg mr-2"
+          className=" font-base inline cursor-pointer text-lg mr-2 text-slate-800"
           onClick={() => showSoloCol(id)}>
           {title}
         </h2>

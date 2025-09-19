@@ -37,13 +37,13 @@ export default function CreateItem() {
   return (
     <>
       <button
-        className="flex justify-center cursor-pointer rounded-md bg-slate-800 py-2 px-4 border border-transparent text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-auto"
+        className="flex justify-center cursor-pointer rounded-md bg-slate-800 py-2 px-3 border border-transparent text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-auto"
         onClick={() => setShowModal(true)}>
         Create item{" "}
         <RiStickyNoteAddLine
           size="15px"
           color="white"
-          style={{ alignSelf: "center", marginLeft: "1rem" }}
+          style={{ alignSelf: "center", marginLeft: "0.5rem" }}
         />
       </button>
       {showModal &&
@@ -53,7 +53,7 @@ export default function CreateItem() {
             onClose={() => {
               setShowModal(false);
             }}>
-            <h2>New Item</h2>
+            <h2 className="text-slate-600">New Item</h2>
 
             <form className="flex flex-col" onSubmit={(e) => handleSubmit(e)}>
               <Input

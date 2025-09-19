@@ -70,9 +70,11 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
     setEditedItem(null);
   };
 
+  //DND-code below
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: currentItem.id,
   });
+
   const style = transform
     ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
     : undefined;
@@ -80,7 +82,7 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
   return (
     <div
       ref={setNodeRef}
-      style={{ ...style, zIndex: 99998 }}
+      style={{ ...style, zIndex: 99997, touchAction: "manipulation" }}
       {...attributes}
       className="bg-gray-100/85 text-slate-800 p-3 mb-3 rounded-xl w-full self-center grid grid-cols-6 align-middle">
       <GrDrag
@@ -151,9 +153,7 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
             ) : (
               // VIEW MODE
               <>
-                <h2 className="text-2xl mb-1 mt-2 text-slate-600">
-                  {currentItem.title}
-                </h2>
+                <h2 className="mb-1 text-slate-600">{currentItem.title}</h2>
                 <p className="text-xs italic text-slate-600">
                   {currentItem.date}
                 </p>

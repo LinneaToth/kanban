@@ -10,9 +10,19 @@
 
 
  body {
+     /* backdrop-filter: blur(1px); */
+     /* backdrop-filter: brightness(150%);
+     background-image: url("assets/img/bg_pattern.jpg");
+     background-size: repeat; */
 
-     background-image: url("assets/img/bg-leaves.png");
+     background-image: url("assets/img/bg-mtn.jpg");
      background-size: cover;
+     background-attachment: fixed;
+     overflow-y: scroll;
+
+     /* 
+     background: #0F172A;
+     background: linear-gradient(346deg, rgba(15, 23, 42, 1) 1%, rgba(100, 116, 139, 1) 100%); */
  }
 
  #logo {

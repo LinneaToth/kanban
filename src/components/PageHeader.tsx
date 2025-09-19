@@ -25,7 +25,7 @@ export default function PageHeader() {
     localStorage.setItem("localKanban", JSON.stringify(state));
   }, [state]);
 
-  const toggleExpand = () => setExpanded((e) => !e);
+  const toggleExpand = () => setExpanded(expanded ? false : true);
 
   const onClose = useCallback(() => setExpanded(false), []);
 
@@ -49,7 +49,7 @@ export default function PageHeader() {
   }, [expanded, onClose]);
 
   return (
-    <header className="w-full h-7 bg-slate-800 text-white flex justify-start">
+    <header className="relative z-[100000] w-full h-7 bg-slate-800 text-white flex justify-start 2xl:h-[2.5rem] drop-shadow-lg">
       <button
         className="justify-self-start mr-3 ml-3 cursor-pointer"
         onClick={toggleExpand}>
@@ -58,7 +58,7 @@ export default function PageHeader() {
 
       <h1
         id="logo"
-        className="inline mr-6 ml-3 cursor-pointer text-2xl"
+        className="inline mr-6 ml-3 cursor-pointer text-2xl 2xl:mt-1"
         onClick={() => {
           setSearchParams({});
           setTimeout(() => dispatch({ type: "resetLayout" }), 0);
@@ -70,7 +70,7 @@ export default function PageHeader() {
         <nav
           ref={menuRef}
           className="absolute left-0 ml-7 top-7 mt-3 p-2 bg-slate-800/70 backdrop-blur-sm rounded-xl"
-          style={{ zIndex: 99999999 }}
+          style={{ zIndex: 99999 }}
           onClick={toggleExpand}>
           <ul>
             {state.boards
