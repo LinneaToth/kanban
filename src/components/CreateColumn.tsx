@@ -21,7 +21,7 @@ export default function CreateColumn({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newId: string = uuidv4();
+    const newId: string = "col-" + uuidv4().slice(0, 8);
     if (dispatch) {
       dispatch({
         type: "addOptionalCol",

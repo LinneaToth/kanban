@@ -27,7 +27,7 @@ export default function PageHeader() {
 
   const toggleExpand = () => setExpanded(expanded ? false : true);
 
-  const onClose = useCallback(() => setExpanded(false), []);
+  const onClose = useCallback(() => setExpanded(false), []); //UseCallback recommended by ESlint to prevent from unnecessary re-renders
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -51,11 +51,11 @@ export default function PageHeader() {
   return (
     <header className="relative z-[100000] w-full h-7 bg-slate-800 text-white flex justify-start 2xl:h-[2.5rem] drop-shadow-lg">
       <button
-        className="justify-self-start mr-3 ml-3 cursor-pointer"
-        onClick={toggleExpand}>
+        type="button"
+        onClick={toggleExpand}
+        className="ml-3 mr-3 cursor-pointer relative z-50">
         <TbStack2Filled className="text-white" />
       </button>
-
       <h1
         id="logo"
         className="inline mr-6 ml-3 cursor-pointer text-2xl 2xl:mt-1"
@@ -69,7 +69,7 @@ export default function PageHeader() {
       {expanded && (
         <nav
           ref={menuRef}
-          className="absolute left-0 ml-7 top-7 mt-3 p-2 bg-slate-800/70 backdrop-blur-sm rounded-xl"
+          className="absolute left-0 ml-7 top-7 mt-3 p-2 bg-slate-800/70 rounded-xl"
           style={{ zIndex: 99999 }}
           onClick={toggleExpand}>
           <ul>

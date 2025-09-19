@@ -67,6 +67,7 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
       newItems.push(action.payload);
       return { ...state, items: newItems };
     }
+
     case "showOptionalCol": {
       return {
         ...state,
