@@ -4,19 +4,7 @@ import { kanbanReducer } from "./reducer/kanbanReducer";
 import type { Kanban } from "./types/types";
 import KanbanBoard from "./components/KanbanBoard";
 import PageHeader from "./components/PageHeader.tsx";
-
-const initialState: Kanban = {
-  boards: [
-    { id: "00", title: "Todo" },
-    { id: "01", title: "Doing" },
-    { id: "02", title: "Done" },
-  ],
-  items: [],
-  layout: {
-    baseShowing: true,
-    optionalCol: "",
-  },
-};
+import { initialState } from "./reducer/InitialState.ts";
 
 function App() {
   const localStorageKanban: string | null = localStorage.getItem("localKanban");

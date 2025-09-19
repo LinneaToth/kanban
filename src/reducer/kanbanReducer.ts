@@ -1,5 +1,6 @@
 import type { Kanban, Item } from "../types/types.ts";
 import { v4 as uuidv4 } from "uuid";
+import { initialState } from "./InitialState.ts";
 
 export type ACTIONTYPE =
   | { type: "moveToColumn"; payload: { boardId: string; itemId: string } }
@@ -127,16 +128,7 @@ export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
 
     case "clearBoard": {
       return {
-        boards: [
-          { id: "00", title: "Todo" },
-          { id: "01", title: "Doing" },
-          { id: "02", title: "Done" },
-        ],
-        items: [],
-        layout: {
-          baseShowing: true,
-          optionalCol: "",
-        },
+        ...initialState,
       };
     }
 

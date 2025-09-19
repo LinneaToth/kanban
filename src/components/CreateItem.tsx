@@ -12,7 +12,7 @@ export default function CreateItem() {
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [parent, setParent] = useState("00");
+  const [parent, setParent] = useState(state?.layout.optionalCol || "00");
 
   useEffect(() => {
     localStorage.setItem("localKanban", JSON.stringify(state));
@@ -22,15 +22,15 @@ export default function CreateItem() {
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    setTitle("");
-    setDescription("");
-    setParent("00");
     if (dispatch) {
       dispatch({
         type: "newItem",
         payload: { title: title, description: description, parent: parent },
       });
     }
+    setTitle("");
+    setDescription("");
+    setParent("00");
     setShowModal(false);
   };
 
@@ -74,12 +74,13 @@ export default function CreateItem() {
                   setDescription(e.target.value)
                 }
               />
+
               <Input
                 type="select"
                 name="parent"
                 labelText="Category:"
                 options={state.boards}
-                value="01"
+                value={parent}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                   setParent(e.target.value)
                 }
