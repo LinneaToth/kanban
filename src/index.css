@@ -5,13 +5,15 @@
  #root {
      height: 100vh;
      font-family: "Nunito", sans-serif;
+     overflow: auto;
+     padding-bottom: 2rem;
  }
 
  body {
      background-image: url("assets/img/bg-mtn-reduced.jpeg");
      background-size: cover;
      background-attachment: fixed;
-     overflow-y: scroll;
+     overflow: hidden;
      background-color: #99B9D2;
  }
 
