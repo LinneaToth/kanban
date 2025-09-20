@@ -1,4 +1,6 @@
 import { useReducer, useEffect } from "react";
+
+//Project specific imports
 import { KanbanContext, KanbanDispatchContext } from "./context/KanbanContext";
 import { kanbanReducer } from "./reducer/kanbanReducer";
 import type { Kanban } from "./types/types";

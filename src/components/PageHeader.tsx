@@ -1,34 +1,36 @@
 import { useContext, useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
+import { useSearchParams } from "react-router-dom";
+
+//Project specific imports
 import { KanbanDispatchContext, KanbanContext } from "../context/KanbanContext";
 import ModalContent from "./ModalContent";
 import CreateColumn from "./CreateColumn";
-import { useSearchParams } from "react-router-dom";
 
+//ICONS:
 import { MdOutlineAddToPhotos } from "react-icons/md";
 import { TbStack2Filled, TbCategory } from "react-icons/tb";
 import { LuTimerReset } from "react-icons/lu";
 import { AiOutlineClear } from "react-icons/ai";
 
 export default function PageHeader() {
+  //Is the nav menu visible? Target the container with a ref
   const [expanded, setExpanded] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  //Is there a visibel modal (in this case for creating columns)?
   const [showModal, setShowModal] = useState(false);
 
   const state = useContext(KanbanContext);
   const dispatch = useContext(KanbanDispatchContext);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const [, setSearchParams] = useSearchParams();
-
   if (!dispatch || !state) throw new Error("Context missing");
 
-  useEffect(() => {
-    localStorage.setItem("localKanban", JSON.stringify(state));
-  }, [state]);
+  const [, setSearchParams] = useSearchParams();
 
   const toggleExpand = () => setExpanded(expanded ? false : true);
 
   const onClose = useCallback(() => setExpanded(false), []); //UseCallback recommended by ESlint to prevent from unnecessary re-renders
 
+  //Ensure that the nav container collapses whenever anything else is clicked or user presses Esc
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -50,6 +52,7 @@ export default function PageHeader() {
 
   return (
     <header className="relative z-[100000] w-full h-7 bg-slate-800 text-white flex justify-start 2xl:h-[2.5rem] drop-shadow-lg">
+      {/*button for expandable menu*/}
       <button
         type="button"
         onClick={toggleExpand}
@@ -66,6 +69,7 @@ export default function PageHeader() {
         myKanBan
       </h1>
 
+      {/*The little nav box that shows when the icon is clicked*/}
       {expanded && (
         <nav
           ref={menuRef}
@@ -110,6 +114,7 @@ export default function PageHeader() {
         </nav>
       )}
 
+      {/*Modal for creating custom column*/}
       {showModal &&
         createPortal(
           <ModalContent

@@ -1,34 +1,4 @@
-import type { Column } from "../types/types";
-
-// BaseProps: shared props
-type BaseProps = {
-  name: string;
-  labelText: string;
-};
-
-// text input
-type TextInputProps = BaseProps & {
-  type: "text";
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-// textarea input
-type TextareaProps = BaseProps & {
-  type: "textarea";
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-};
-
-// select input
-type SelectProps = BaseProps & {
-  type: "select";
-  value: string; // selected board id
-  options: Column[]; // list of boards
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-};
-
-export type InputProps = TextInputProps | TextareaProps | SelectProps;
+import type { Column, InputProps } from "../types/types";
 
 export default function Input(props: InputProps) {
   const { name, labelText, type, value, onChange } = props;

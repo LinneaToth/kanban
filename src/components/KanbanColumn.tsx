@@ -1,19 +1,18 @@
-import { useDroppable } from "@dnd-kit/core";
-import CreateItem from "./CreateItem";
 import { useContext, useEffect, useState } from "react";
+import { useDroppable } from "@dnd-kit/core";
+import { useSearchParams } from "react-router-dom";
+
+//Project specific imports
 import { KanbanContext } from "../context/KanbanContext";
 import { KanbanDispatchContext } from "../context/KanbanContext";
-import { useSearchParams } from "react-router-dom";
 import Input from "./Input";
+import CreateItem from "./CreateItem";
+import type { KanbanColumnProps } from "../types/types";
+
+//ICONS
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
 import { FaRegSave } from "react-icons/fa";
-
-interface KanbanColumnProps {
-  id: string;
-  children: React.ReactNode;
-  title: string;
-}
 
 export default function KanbanColumn({
   id,
@@ -24,6 +23,7 @@ export default function KanbanColumn({
   const dispatch = useContext(KanbanDispatchContext);
   const [searchParams, setSearchParams] = useSearchParams();
 
+  //State dealing with editing the category name. newCategory is a temporary storage for the new name, edit lets the app know if we are currently editing or not
   const [newCategory, setNewCategory] = useState("");
   const [edit, setEdit] = useState(false);
 
@@ -77,10 +77,11 @@ export default function KanbanColumn({
         "bg-gray-200/65 p-5 pt-3 md:w-[250px] flex flex-col rounded-2xl min-h-[40vh] md:self-start drop-shadow-md"
       }>
       <nav className="flex flex-row border-b-1 border-slate-400 pb-2 pt-2 mb-3">
+        {/*if editing, show the input field. If not, just render the header. */}
         {edit ? (
           <form
             onSubmit={(e) => {
-              e.preventDefault;
+              e.preventDefault();
               handleSubmitChange();
             }}>
             <Input
@@ -100,6 +101,7 @@ export default function KanbanColumn({
             {title}
           </h2>
         )}
+        {/*only show the editing options if it is one of the custom columns. The base ones aren't supposed to be changed*/}
         {isOptionalCol && (
           <>
             <button

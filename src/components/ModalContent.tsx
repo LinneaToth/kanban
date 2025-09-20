@@ -1,10 +1,7 @@
 import { useEffect, useRef } from "react";
 
-type ModalContentProps = {
-  onClose: () => void;
-  showModal: boolean;
-  children: React.ReactNode;
-};
+//Project specific imports
+import type { ModalContentProps } from "../types/types";
 
 export default function ModalContent({
   onClose,

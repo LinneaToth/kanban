@@ -1,37 +1,37 @@
-import { useDraggable } from "@dnd-kit/core";
 import { useState, useContext, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useSearchParams } from "react-router-dom";
+import { useDraggable } from "@dnd-kit/core";
+
+//Project specific imports
 import ModalContent from "./ModalContent.tsx";
-import { GrDrag } from "react-icons/gr";
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
 import Input from "./Input.tsx";
 import Button from "./Button.tsx";
 import type { Item } from "../types/types.ts";
+import type { KanbanItemProps } from "../types/types.ts";
 
-interface KanbanItemProps {
-  itemId: string;
-}
+//ICONS
+import { GrDrag } from "react-icons/gr";
 
 export default function KanbanItem({ itemId }: KanbanItemProps) {
   const state = useContext(KanbanContext);
   const dispatch = useContext(KanbanDispatchContext);
   const [searchParams, setSearchParams] = useSearchParams();
 
+  //Is the item currently editable? If so, edits are stored in a temporary state
   const [edit, setEdit] = useState(false);
   const [editedItem, setEditedItem] = useState<Item | null>(null);
-
-  useEffect(() => {
-    localStorage.setItem("localKanban", JSON.stringify(state));
-  }, [state]);
 
   const currentItem = state?.items.find((item) => item.id === itemId);
 
   if (!currentItem || !state || !dispatch)
     throw new Error("Something is missing!");
 
+  //Whenever an item is focused, there will always be a matching URL with corresponding params
   const isOpen = searchParams.get("itemid") === String(itemId);
 
+  //Syncs the (temporary) edited item with the targeted item, whenever the targeted item is changed
   useEffect(() => {
     if (currentItem) {
       setEditedItem({
@@ -41,6 +41,7 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
     }
   }, [currentItem]);
 
+  //Logic for updating state when item is edited
   const handleToggleEdit = () => {
     if (edit) {
       if (editedItem) {
@@ -64,6 +65,7 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
     setEdit(false);
   };
 
+  //When the item modal closes, we no longer need a targeting URL, we are not editing and do not need a temporary item
   const handleCloseModal = () => {
     setSearchParams({});
     setEdit(false);
@@ -100,7 +102,7 @@ export default function KanbanItem({ itemId }: KanbanItemProps) {
         createPortal(
           <ModalContent showModal={isOpen} onClose={handleCloseModal}>
             {edit && editedItem ? (
-              // EDIT MODE: editedItem is guaranteed non-null here, these are here to please TypeScript
+              // EDIT MODE: editedItem is guaranteed non-null here, these guards are here to please TypeScript
               <>
                 <Input
                   type="text"

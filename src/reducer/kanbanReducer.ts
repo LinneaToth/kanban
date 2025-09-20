@@ -1,30 +1,9 @@
 import type { Kanban, Item } from "../types/types.ts";
 import { v4 as uuidv4 } from "uuid";
 import { initialState } from "./InitialState.ts";
+import type { Actiontype } from "../types/types.ts";
 
-export type ACTIONTYPE =
-  | { type: "moveToColumn"; payload: { boardId: string; itemId: string } }
-  | {
-      type: "newItem";
-      payload: { title: string; description: string; parent: string };
-    }
-  | {
-      type: "deleteItem";
-      payload: { id: string };
-    }
-  | {
-      type: "updateItem";
-      payload: Item;
-    }
-  | { type: "showOptionalCol"; payload: string }
-  | { type: "showBaseCols"; payload: boolean }
-  | { type: "addOptionalCol"; payload: { title: string; id: string } }
-  | { type: "editCol"; payload: { title: string; id: string } }
-  | { type: "clearBoard" }
-  | { type: "resetLayout" }
-  | { type: "deleteCol"; payload: string };
-
-export function kanbanReducer(state: Kanban, action: ACTIONTYPE) {
+export function kanbanReducer(state: Kanban, action: Actiontype) {
   switch (action.type) {
     case "moveToColumn": {
       const { itemId, boardId } = action.payload;

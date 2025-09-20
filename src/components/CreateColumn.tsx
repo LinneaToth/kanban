@@ -1,22 +1,24 @@
-import Input from "./Input";
 import { useContext, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { useSearchParams } from "react-router-dom";
+
+//Project specific imports
 import { KanbanDispatchContext } from "../context/KanbanContext";
 import { KanbanContext } from "../context/KanbanContext";
-import { useSearchParams } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
-
-interface CreateColumnProps {
-  setShowModal: (input: boolean) => void;
-  setExpanded: (input: boolean) => void;
-}
+import Input from "./Input";
+import type { CreateColumnProps } from "../types/types";
 
 export default function CreateColumn({
   setShowModal,
   setExpanded,
 }: CreateColumnProps) {
-  const [newCategory, setNewCategory] = useState("");
   const dispatch = useContext(KanbanDispatchContext);
   const state = useContext(KanbanContext);
+
+  //Temporary state for controlling the input field
+  const [newCategory, setNewCategory] = useState("");
+
+  //For updating the routing params
   const [, setSearchParams] = useSearchParams();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

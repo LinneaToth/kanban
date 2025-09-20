@@ -8,10 +8,13 @@ import {
   TouchSensor,
   type DragEndEvent,
 } from "@dnd-kit/core";
+
+//Project specific imports
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
 import KanbanColumn from "./KanbanColumn";
 import KanbanItem from "./KanbanItem";
 import type { Kanban } from "../types/types";
+import { computeVisibleColumns } from "../utils/utils";
 
 export default function KanbanBoard(): React.JSX.Element {
   const state: Kanban | null = useContext(KanbanContext);
@@ -24,17 +27,8 @@ export default function KanbanBoard(): React.JSX.Element {
 
   // Visible columns based on layout state, computation added to a useMemo to avoid unnecessary re-rendering
   const visibleColumns = useMemo(() => {
-    const cols: string[] = [];
-    if (state.layout.baseShowing) {
-      for (let i = 0; i < 3; i++) {
-        cols.push(state.boards[i].id);
-      }
-    }
-    if (state.layout.optionalCol) {
-      cols.push(state.layout.optionalCol);
-    }
-    return cols;
-  }, [state.layout, state.boards]);
+    return computeVisibleColumns(state);
+  }, [state]);
 
   // Effect dealing with item urls
   useEffect(() => {
@@ -47,6 +41,7 @@ export default function KanbanBoard(): React.JSX.Element {
       return;
     }
 
+    //If URL is asking for an item, and it isn't shown - bring it on!
     if (!visibleColumns.includes(item.parent)) {
       dispatch({ type: "showBaseCols", payload: false });
       dispatch({ type: "showOptionalCol", payload: item.parent });
@@ -59,9 +54,10 @@ export default function KanbanBoard(): React.JSX.Element {
     if (!colId) return; //If not, don't bother
 
     if (!state.boards.find((board) => board.id === colId)) {
-      setSearchParams({}); //if the board doesn't exist, don't bother
+      setSearchParams({}); //if the board doesn't exist, another good time to not bother
       return;
     }
+    //All clear? Let's go, show the requested col!
     dispatch({ type: "showBaseCols", payload: false });
     dispatch({ type: "showOptionalCol", payload: colId });
   }, [setSearchParams, searchParams, state.boards, dispatch]);

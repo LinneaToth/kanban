@@ -1,24 +1,27 @@
-import ModalContent from "./ModalContent";
 import { useState, useContext, useEffect } from "react";
 import { createPortal } from "react-dom";
+
+//Project specific imports
 import { KanbanContext, KanbanDispatchContext } from "../context/KanbanContext";
+import ModalContent from "./ModalContent";
 import Input from "./Input";
+
+//ICONS
 import { RiStickyNoteAddLine } from "react-icons/ri";
 
 export default function CreateItem() {
   const state = useContext(KanbanContext);
+  if (!state) throw new Error("State missing");
+
   const dispatch = useContext(KanbanDispatchContext);
 
+  //Is the modal showing?
   const [showModal, setShowModal] = useState(false);
+
+  //Controlling the input fields
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [parent, setParent] = useState(state?.layout.optionalCol || "00");
-
-  useEffect(() => {
-    localStorage.setItem("localKanban", JSON.stringify(state));
-  }, [state]);
-
-  if (!state) throw new Error("State missing");
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
