@@ -70,14 +70,14 @@ export default function KanbanBoard(): React.JSX.Element {
   //DND-code below, setting up sensors for mouse and touch, & events for dragging the items:
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
-      distance: 5, // pixels to move before drag starts
+      distance: 5,
     },
   });
 
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: {
-      delay: 150, // ms press delay before dragging
-      tolerance: 5, // movement allowed during delay
+      delay: 150,
+      tolerance: 5,
     },
   });
   const sensors = useSensors(mouseSensor, touchSensor);
