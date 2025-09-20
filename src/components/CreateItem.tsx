@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { createPortal } from "react-dom";
 
 //Project specific imports
