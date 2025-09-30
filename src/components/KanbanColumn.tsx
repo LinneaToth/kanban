@@ -41,21 +41,11 @@ export default function KanbanColumn({
   };
   //DND-code above
 
-  //If the URL points towards the column being rendered, update layout accordingly
-  useEffect(() => {
-    if (isFocused) {
-      dispatch({ type: "showOptionalCol", payload: id });
-      dispatch({ type: "showBaseCols", payload: false });
-    }
-  }, [isFocused, dispatch, id]);
-
   //00, 01 and 02 (todo, doing, done) belong to the base layout and aren't optional.
   const isOptionalCol = id !== "00" && id !== "01" && id !== "02";
 
   //If header is clicked, URL is updated with the corresponding params (column id) and the layout in the state is updated
   const showSoloCol = (colId: string): void => {
-    dispatch({ type: "showBaseCols", payload: false });
-    dispatch({ type: "showOptionalCol", payload: colId });
     setSearchParams({ col: colId });
   };
 
